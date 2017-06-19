@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Netflix Logout</title>
+  <link rel="stylesheet" type="text/css" href="css/logout.css">
+  <style>
+   body {
+    background-image: url("img/index.jpg");
+}
+  </style>
+</head>
+<body >
+  <div class="login-page">
+    <p class="text">
+    You have been successfuly logged out of Netflix.<br>Click the button below to login.
+     <br><br><br><br></p>
+  <a href="index.html" class="button">Return to Login</a>
+</div>
+<script>
+window.sessionStorage.setItem("user", null);
+window.sessionStorage.setItem("password", null);
+</script>
+</body>
+</html>

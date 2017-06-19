@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Netflix Agenda</title>
+<link rel="stylesheet" href="css/agenda.css">
+</head>
+<body>
+
+<ul id="header">
+  <li><a class="active" href="series.html">Browse Airing Series</a></li>
+  <li><a href="mylist.html">View Followed Series</a></li>
+  <li><a href="mycompleted.html">View Completed Series</a></li>
+  <li><a href="email.html">Manage E-mail Notifications</a></li>
+   <li style="float:right"><a class="active" href="logout.html">Logout</a></li>
+</ul>
+<div id="seriesList">
+ <h1>My Netflix Agenda</h1>
+ <table id="monday">
+ <tr>
+ 	<th>Monday&emsp;</th>
+  </tr>
+ </table>
+ <table id="tuesday">
+ <tr>
+ 	<th>Tuesday&emsp;</th>
+  </tr>
+ </table>
+ <table id="wednesday">
+ <tr>
+ 	<th>Wednesday&emsp;</th>
+  </tr>
+ </table>
+ <table id="thursday">
+ <tr>
+ 	<th>Thursday&emsp;</th>
+  </tr>
+ </table>
+ <table id="friday">
+ <tr>
+ 	<th>Friday&emsp;</th>
+  </tr>
+ </table>
+ <table id="saturday">
+ <tr>
+ 	<th>Saturday&emsp;</th>
+  </tr>
+ </table>
+ <table id="sunday">
+ <tr>
+ 	<th>Sunday&emsp;</th>
+  </tr>
+ </table>
+ </div>
+<script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<script>
+function loadSeries(){
+		var user=window.sessionStorage.getItem("user");
+		var password=window.sessionStorage.getItem("password");
+		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Monday", function(data){
+			if ( data.length == 0 ) {
+				$("#monday").append(
+						"<tr><td><u>No New Episodes</u><br><br></td></tr>");}
+		    else{
+			$.each(data, function(i, series){
+				$("#monday").append(
+				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
+			});}
+
+	});
+		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Tuesday", function(data){
+			if ( data.length == 0 ) {
+				$("#tuesday").append(
+						"<tr><td><u>No New Episodes</u><br><br></td></tr>");}
+			else{
+			$.each(data, function(i, series){
+				$("#tuesday").append(
+				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
+			});}
+
+	});
+		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Wednesday", function(data){
+			if ( data.length == 0 ) {
+				$("#wednesday").append(
+						"<tr><td><u>No New Episodes</u><br><br></td></tr>");
+		    }
+			else{
+			$.each(data, function(i, series){
+				$("#wednesday").append(
+				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
+			});}
+
+	});
+		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Thursday", function(data){
+			if ( data.length == 0 ) {
+				$("#thursday").append(
+						"<tr><td><u>No New Episodes</u><br><br></td></tr>");
+		    }
+			else{
+			$.each(data, function(i, series){
+				$("#thursday").append(
+				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
+			});}
+
+	});
+		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Friday", function(data){
+			if ( data.length == 0 ) {
+				$("#friday").append(
+						"<tr><td><u>No New Episodes</u><br><br></td></tr>");
+		    }
+			else{
+			$.each(data, function(i, series){
+				$("#friday").append(
+				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
+			});}
+
+	});
+		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Saturday", function(data){
+			if ( data.length == 0 ) {
+				$("#saturday").append(
+						"<tr><td><u>No New Episodes</u><br><br></td></tr>");
+		    }
+			else{
+			$.each(data, function(i, series){
+				$("#saturday").append(
+				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
+			});}
+
+	});
+		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Sunday", function(data){
+			if ( data.length == 0 ) {
+				$("#sunday").append(
+						"<tr><td><u>No New Episodes</u><br><br></td></tr>");
+		    }
+			else{
+			$.each(data, function(i, series){
+				$("#sunday").append(
+				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
+			});}
+
+	});
+}
+</script>
+<script>
+loadSeries()
+</script>
+<script>
+	var user=window.sessionStorage.getItem("user");
+	$.getJSON("/thirdapp/restservices/customerseries/sendmail/"+user, function(data){
+		if ( data.length == 0 ) {
+			console.log("An error occured!")	
+		}});
+</script>
+
+
+</body>
+</html>

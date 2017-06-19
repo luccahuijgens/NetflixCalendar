@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="css/series.css">
+<title>My Followed Series</title>
+<link rel="stylesheet" href="css/mylist.css">
 </head>
 <body>
 
 <ul id="header">
   <li><a class="active" href="agenda.html">View Agenda</a></li>
-  <li><a href="mylist.html">View Followed Series</a></li>
+  <li><a href="series.html">Browse Airing Series</a></li>
   <li><a href="mycompleted.html">View Completed Series</a></li>
    <li><a href="email.html">Manage E-mail Notifications</a></li>
    <li style="float:right"><a class="active" href="logout.html">Logout</a></li>
 </ul>
 <div id="seriesList">
- <h1>Currently Airing Series</h1>
-  <table id="series">
+ <h1>My Subscribed Series</h1>
+ <table id="series">
  <tr>
  	<th>Series&emsp;</th>
     <th>Title&emsp;</th>
@@ -24,15 +25,16 @@
     <th>Viewers&emsp;</th>
     <th>Studio</th>
     <th>Synopsis&emsp;</th>
-    <th>Follow this Series&emsp;</th>
+    <th>Remove this Series&emsp;</th>
   </tr>
  </table>
  </div>
 <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 <script>
 function loadSeries(){
-		var user=window.sessionStorage.getItem("user");
-		$.getJSON("/thirdapp/restservices/series", function(data){
+	var user=window.sessionStorage.getItem("user");
+	var password=window.sessionStorage.getItem("password");
+		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password, function(data){
 			$.each(data, function(i, series){
 				$("#series").append(
 				"<tr><td><center><img src=img/"+series.id+".jpg border=3 height=320 width=225></img></center>&emsp;<br></td>"
@@ -43,26 +45,36 @@ function loadSeries(){
 				+"<td>"+series.viewers+"&emsp;<br></td>"
 				+"<td><a href=/thirdapp/studios/"+series.studio+".html>"+series.studio+"</a><br></td>"
 				+"<td style=font-size:15px;>"+series.synopsis+"&emsp;<br></td>"
-				+"<td><input type=button value=Follow data-custid="+user+" data-seriesid="+series.id+"></td></tr>");
+				+"<td><input type=button value=Unfollow data-custid="+user+" data-seriesid="+series.id+"></td></tr>");
 			});
 
 	});
 }
 </script>
 <script>
+
 $("#series").on('click', 'input[type=button]', function () {
-       var custid = $(this).data('custid');
-       var seriesid = $(this).data('seriesid');
-    	    var data = { "CustomerID": custid, "SeriesID": seriesid }
-    	    var JSONdata = JSON.stringify(data);
-    	    console.log(data);
-    	    $.post("/thirdapp/restservices/customerseries", JSONdata, function(response) {
-    	        $("#response").text(JSON.stringify(response));
-    	        alert("This Series has been added to your list!");
-    	    }); 
-    	});
+   var custid = $(this).data('custid');
+   var seriesid = $(this).data('seriesid');
+   var uri = "/thirdapp/restservices/customerseries/delete/" + custid+"+"+seriesid;
+   console.log("ready")
+   $.ajax(uri, { 
+       type: "delete", 
+       success: function(response) {
+           $("#response").text("Customer deleted!");
+           alert("This Series has been removed from your list!");
+           location.reload();
+       },
+       error: function(response) {
+           $("#response").text("Could not delete customer!");
+       }
+   });
+});
+
 </script>
-<script>loadSeries()</script>
+<script>
+loadSeries()
+</script>
 
 
 </body>

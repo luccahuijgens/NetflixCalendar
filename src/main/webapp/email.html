@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Manage Email Notifications</title>
+<link rel="stylesheet" href="css/email.css">
+<style>
+input[type="checkbox"]{
+  width: 60px;
+  height: 60px;
+  border: 10px solid $grey;
+}
+</style>
+</head>
+<body>
+
+<ul id="header">
+  <li><a class="active" href="agenda.html">View Agenda</a></li>
+  <li><a href="series.html">Browse Airing Series</a></li>
+   <li><a href="mylist.html">View Followed Series</a></li>
+  <li><a href="mycompleted.html">View Completed Series</a></li>
+   <li style="float:right"><a class="active" href="logout.html">Logout</a></li>
+</ul>
+<div id="seriesList">
+ <h1>Manage E-mail Notifications</h1>
+ <table id="series">
+ <tr>
+ 	<th>Series&emsp;</th>
+    <th>Title&emsp;</th>
+    <th>Episodes&emsp;</th> 
+    <th>Rating&emsp;</th>
+    <th>Viewers&emsp;</th>
+    <th>Enable/Disable<br>Email Notification&emsp;</th>
+  </tr>
+ </table>
+ </div>
+<script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<script>
+function loadSeries(){
+	var user=window.sessionStorage.getItem("user");
+	var password=window.sessionStorage.getItem("password")
+		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/unfinished", function(data){
+			$.each(data, function(i, series){
+				if (series.email=="No"){
+				$("#series").append(
+				"<tr><td><center><img src=img/"+series.id+".jpg border=3 height=320 width=225></img></center>&emsp;<br></td>"
+				+"<td><b>"+series.title+"</b>&emsp;<br></td>"
+				+"<td>"+series.episodes+"&emsp;<br></td>"
+				+"<td>"+series.score+"&emsp;<br></td>"
+				+"<td>"+series.viewers+"&emsp;<br></td>"
+				+"<td><input type=checkbox id=email"+series.id+" data-custid="+user+" data-seriesid="+series.id+"></td></tr>");
+				}else{
+					$("#series").append(
+							"<tr><td><center><img src=img/"+series.id+".jpg border=3 height=320 width=225></img></center>&emsp;<br></td>"
+							+"<td><b>"+series.title+"</b>&emsp;<br></td>"
+							+"<td>"+series.episodes+"&emsp;<br></td>"
+							+"<td>"+series.score+"&emsp;<br></td>"
+							+"<td>"+series.viewers+"&emsp;<br></td>"
+							+"<td><input type=checkbox id=email"+series.id+" data-custid="+user+" data-seriesid="+series.id+" checked/></td></tr>");
+				}
+	});
+});
+}
+</script>
+<script>
+	$("#series").on('click', 'input[type=checkbox]', function () {
+		var user=window.sessionStorage.getItem("user");
+	    if(!$(this).is(':checked')){
+	    	   var custid = $(this).data('custid');
+	    	    var seriesid = $(this).data('seriesid');
+	    	    var email="No";
+	    	    console.log(custid+"+"+seriesid);
+	    		console.log(email);
+	    		
+	    		var uri = "/thirdapp/restservices/customerseries/email/"+user+"+"+seriesid+"+"+email;
+	    		console.log
+
+	    		    $.ajax(uri, { 
+	    		        type: "put", 
+	    		        success: function(response) {
+	    		        	alert("Email Notifications for this Series have been disabled!");
+	    		            $("#response").text("Customer saved!");
+	    		        },
+	    		        error: function(response) {
+	    		            $("#response").text("Could not update customer!");
+	    		        }
+	    		    }); 
+	    }else{
+	        console.log('checked');
+	    var custid = $(this).data('custid');
+	    var seriesid = $(this).data('seriesid');
+	    var email="Yes";
+	    console.log(custid+"+"+seriesid);
+		console.log(email);
+		
+		var uri = "/thirdapp/restservices/customerseries/email/"+user+"+"+seriesid+"+"+email;
+
+		    $.ajax(uri, { 
+		        type: "put", 
+		        success: function(response) {
+		        	alert("Email Notifications for this Series have been enabled!");
+		            $("#response").text("Customer saved!");
+		        },
+		        error: function(response) {
+		            $("#response").text("Could not update customer!");
+		        }
+		    }); 
+	}
+	}); 
+</script>
+<script>
+loadSeries()
+</script>
+
+
+</body>
+</html>

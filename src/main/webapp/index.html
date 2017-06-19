@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Netflix Login</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+  body {
+    background-image: url("img/index.jpg");
+}
+.form input[type="button"] {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: Red;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.form input[type="button"]:hover,.form input[type="button"]:active,.form input[type="button"]:focus {
+  background: LightCoral;
+}
+</style>
+</head>
+
+<body>
+  <div class="login-page">
+  <div class="form">
+    <form class="login-form">
+      <input type="text" id="username" placeholder="username"/>
+      <input type="password" id="password" placeholder="password"/>
+      <input type="button" id="login"/ value="login">
+    </form>
+  </div>
+</div>
+  <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script>
+    $("#login").click(function () {
+    	var username=$("#username").val()
+        var password=$("#password").val()
+        console.log("Succes!")
+        console.log(username+"+"+password);
+    		
+    	var uri = "/thirdapp/restservices/customer/"+username+"+"+password;
+
+		$.getJSON(uri, function(data){
+			if (data.length != 0){
+				var val = Math.floor(1000 + Math.random() * 9000);
+				$.getJSON("/thirdapp/restservices/customerseries/sendverif/"+username+"+"+val, function(data){
+				});
+				var person = prompt("Please enter the verification code we sent to your email:");
+
+				if (person == null || person == "") {
+				    txt = "User cancelled the prompt.";
+				}
+				if (person==val){
+					window.sessionStorage.setItem("user", data.id);
+				window.sessionStorage.setItem("password", data.password);
+				console.log(data.id);
+				alert("Login succesful!");
+				window.location = "/thirdapp/agenda.html";
+			}
+			else{
+				alert("The code you entered was incorrect!")
+			}
+			}
+
+		});	
+    });
+    </script>
+
+</body>
+</html>
