@@ -1,1 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: Red;
+}
 
+li {
+    float: left;
+    border-right: 1px solid #bbb;
+}
+li:last-child {
+    border-right: none;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: lightCoral;
+}
+</style>
+</head>
+<body>
+
+<ul>
+  <li><a class="active" href="#home">Home</a></li>
+  <li><a href="#news">News</a></li>
+  <li><a href="#contact">Contact</a></li>
+   <li style="float:right"><a class="active" href="#about">About</a></li>
+</ul>
+<div id="seriesList"></div>
+ <h1>Currently Airing Series</h1>
+ <table id="series">
+ <tr>
+    <th>Title&emsp;</th>
+    <th>Genre&emsp;</th>
+    <th>Episodes&emsp;</th> 
+    <th>Rating&emsp;</th>
+    <th>Viewers&emsp;</th>
+    <th>Synopsis&emsp;</th>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td> 
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+ </table>
+ 
+<script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<script>
+function loadSeries(){
+		$.getJSON("http://localhost:4711/thirdapp/restservices/series", function(data){
+			$.each(data, function(i, series){
+				$("#series").append(
+				"<tr><td>"+series.title+"&emsp;</td>"
+				+"<td>"+series.genre+"&emsp;</td>"
+				+"<td>"+series.episodes+"&emsp;</td>"
+				+"<td>"+series.score+"&emsp;</td>"
+				+"<td>"+series.viewers+"&emsp;</td>"+
+				+"<td>"+series.synopsis+"&emsp;</td>"+
+				"</tr>");
+			});
+
+	});
+	}
+</script>
+<script>
+loadSeries()
+</script>
+
+
+</body>
+</html>
