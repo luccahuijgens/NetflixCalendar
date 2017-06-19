@@ -1,1 +1,10 @@
-
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+ <Resource name="jdbc/OracleDS"
+ url="jdbc:oracle:thin:@//localhost:1521/xe"
+ driverClassName="oracle.jdbc.driver.OracleDriver"
+ auth="Container"
+ type="javax.sql.DataSource"
+ username="ipass"
+ password="ipass" />
+</Context>
