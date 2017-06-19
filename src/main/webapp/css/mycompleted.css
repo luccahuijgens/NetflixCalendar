@@ -1,0 +1,81 @@
+body{
+ background-image: url('/thirdapp/img/netflix.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+    }
+ul {
+	width: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: Red;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+input[type=button] {
+  border-radius: 5px;
+  padding: 15px 25px;
+  font-size: 22px;
+  text-decoration: none;
+  margin: 20px;
+  color: #fff;
+  position: relative;
+  display: inline-block;
+  background-color: #e74c3c;
+}
+
+input[type=button]:hover {
+  border-radius: 5px;
+  padding: 15px 25px;
+  font-size: 22px;
+  text-decoration: none;
+  margin: 20px;
+  color: #fff;
+  position: relative;
+  display: inline-block;
+  background-color: #FF6656;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+    background-color: lightCoral;
+}
+li {
+    border-right: 1px solid #bbb;
+}
+
+li:last-child {
+    border-right: none;
+}
+h1 { font-family: 'Enriqueta', arial, serif; line-height: 1.25; background-color: DarkRed; text-align: center;margin: 0 0 10px; font-size: 40px; font-weight: bold; color:white;}
+th {
+    background-color: Red;
+    color: white;
+}
+table, td, th {    
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+	font-family: 'Enriqueta', arial, serif;
+	font-size: 20px;
+}
