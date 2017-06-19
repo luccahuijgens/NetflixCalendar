@@ -14,7 +14,7 @@
    <li style="float:right"><a class="active" href="/thirdapp/logout.html">Logout</a></li>
 </ul>
 <div id="seriesList">
- <h1>AMC</h1>
+ <h1>Hartswood Films</h1>
   <table id="series">
  <tr>
  	<th>Series&emsp;</th>
@@ -30,7 +30,7 @@
 <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 <script>
 function loadSeries(){
-		$.getJSON("http://localhost:4711/thirdapp/restservices/studio/AMC", function(data){
+		$.getJSON("http://localhost:4711/thirdapp/restservices/studio/Hartswood_Films", function(data){
 			$.each(data, function(i, series){
 				$("#series").append(
 				"<tr><td><center><img src=/thirdapp/img/"+series.id+".jpg border=3 height=320 width=225></img></center>&emsp;<br></td>"
