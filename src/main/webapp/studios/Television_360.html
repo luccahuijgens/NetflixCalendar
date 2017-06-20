@@ -10,7 +10,7 @@
   <li><a href="/thirdapp/series.html">Browse Airing Series</a></li>
   <li><a href="/thirdapp/mylist.html">View Followed Series</a></li>
   <li><a href="/thirdapp/mycompleted.html">View Completed Series</a></li>
-   <li><a href="/thirdapp/mycompleted.html">Manage E-mail Notifications</a></li>
+   <li><a href="/thirdapp/email.html">Manage E-mail Notifications</a></li>
    <li style="float:right"><a class="active" href="/thirdapp/logout.html">Logout</a></li>
 </ul>
 <div id="seriesList">
@@ -30,7 +30,7 @@
 <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 <script>
 function loadSeries(){
-		$.getJSON("http://localhost:4711/thirdapp/restservices/studio/Television_360", function(data){
+		$.getJSON("/thirdapp/restservices/studio/Television_360", function(data){
 			$.each(data, function(i, series){
 				$("#series").append(
 				"<tr><td><center><img src=/thirdapp/img/"+series.id+".jpg border=3 height=320 width=225></img></center>&emsp;<br></td>"
