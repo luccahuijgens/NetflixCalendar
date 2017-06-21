@@ -23,4 +23,7 @@ public class SeriesService {
 		public List<Series> getSeriesbyCustomerIDDay(Customer c, String day, String date){
 			return Seriesdao.getSeriesbyCustomerIDDate(c.getId(), day, date);
 		}
+		public Series getSeriesbyCode(int cd){
+			return Seriesdao.getSeriesbyCode(cd);
+		}
 		}

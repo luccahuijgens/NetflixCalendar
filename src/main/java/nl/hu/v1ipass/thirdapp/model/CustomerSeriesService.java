@@ -1,5 +1,6 @@
 package nl.hu.v1ipass.thirdapp.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nl.hu.v1ipass.thirdapp.persistence.CustomerSeriesDAO;
@@ -25,10 +26,13 @@ public class CustomerSeriesService {
 	public List<CustomerSeries> getAll() {
 		return CustomerSeriesdao.getAll();
 	}
-	public List<Comb>getFinishedCustomerSeriesbyCustomerID(Customer c, String date){
+	public List<CustomerSeries>getFinishedCustomerSeriesbyCustomerID(Customer c, String date){
 		return CustomerSeriesdao.getFinishedCustomerSeriesbyCustomerID(c.getId(), date);
 	}
-	public List<Comb>getUnfinishedCustomerSeriesbyCustomerID(Customer c, String date){
+	public ArrayList<CustomerSeries> getUnfinishedCustomerSeriesbyCustomerID(Customer c, String date){
 		return CustomerSeriesdao.getUnfinishedCustomerSeriesbyCustomerID(c.getId(), date);
+	}
+	public ArrayList<CustomerSeries> getEmailbyCustomerID(Customer c, String date){
+		return CustomerSeriesdao.getEmailbyCustomerID(c.getId(), date);
 	}
 }
