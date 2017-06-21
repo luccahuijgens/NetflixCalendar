@@ -10,6 +10,7 @@ import nl.hu.v1ipass.thirdapp.model.Email;
 import nl.hu.v1ipass.thirdapp.model.Series;
 
 public class EmailDAO extends BaseDAO{
+	//Haal Emailnotificaties van alle Airing CustomerSeries van een specifieke Customer
 	public ArrayList<Email> getEmailByCustomerID(int custid, String date){
 		ArrayList<Email> Serieslijst = new ArrayList<Email>();
 	try{			
