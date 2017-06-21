@@ -279,6 +279,7 @@ public String sendEmail(@PathParam("CustomerId") int custid) {
 	        String from = "luccah06071@gmail.com";
 	        String pass = "Burdeos1";
 	   try{
+		   //genereer email
 	        Properties props = System.getProperties();
 	        props.put("mail.smtp.starttls.enable", "true");
 	        props.put("mail.smtp.host", host);
@@ -318,6 +319,7 @@ public String sendVerification(@PathParam("email") String email, @PathParam("cod
 	        String from = "luccah06071@gmail.com";
 	        String pass = "Burdeos1";
 	   try{
+		   //genereer email
 	        Properties props = System.getProperties();
 	        props.put("mail.smtp.starttls.enable", "true");
 	        props.put("mail.smtp.host", host);
