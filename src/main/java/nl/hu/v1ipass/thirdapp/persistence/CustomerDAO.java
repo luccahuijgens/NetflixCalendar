@@ -9,18 +9,10 @@ import java.util.ArrayList;
 import nl.hu.v1ipass.thirdapp.model.Customer;
 
 public class CustomerDAO extends BaseDAO {
-	// Zorg ter voorbereiding dat je ojdbc.jar download en toevoegt aan je
-	// project.
-
-	// Aanmaken van de variabelen die je connectie specificeren. In dit geval
-	// een gebruiker "harry" met password "harry"
-
 	public CustomerDAO() {
 	}
 
-	// De methode die met JDBC aan de slag gaat moet een SQLException opvangen
-	// of gooien
-
+	//Lijst van alle Customers ontvangen
 	public ArrayList<Customer> getCustomers(){
 		ArrayList<Customer> Customerlijst = new ArrayList<Customer>();
 			// Leg de connectie met de database
@@ -66,7 +58,7 @@ public class CustomerDAO extends BaseDAO {
 	 				}
 	 				return Customerlijst;
 	}
-	
+	//Customer find op basis van Customer ID
 	public Customer findCustomerbyCode(int cd){
 		ArrayList<Customer> Customerlijst = new ArrayList<Customer>();
 	try{			
@@ -110,6 +102,7 @@ public class CustomerDAO extends BaseDAO {
  				}
  				return Customerlijst.get(0);
 }
+//Customer vinden op basis van inloggegevens
 public Customer login(String email, String password){
 	ArrayList<Customer> Customerlijst = new ArrayList<Customer>();
 try{			

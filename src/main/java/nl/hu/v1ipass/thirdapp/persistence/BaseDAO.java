@@ -3,16 +3,11 @@ package nl.hu.v1ipass.thirdapp.persistence;
 import java.io.IOException;
 import java.sql.*;
 
-/**
- * Created by jason on 22-5-2017.
- */
 public class BaseDAO {
     private String connectionURL = "jdbc:oracle:thin:@localhost:1521:XE";
     private String username = "ipass";
     private String password = "ipass";
     private String driver = "oracle.jdbc.driver.OracleDriver";
-    //MySQL > com.mysql.jdbc.Driver
-    //Oracle > oracle.jdbc.driver.OracleDriver
     private Connection con;
 
     BaseDAO() {

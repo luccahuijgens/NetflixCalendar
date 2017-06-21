@@ -15,8 +15,7 @@ public class CustomerSeriesDAO extends BaseDAO{
 		public CustomerSeriesDAO() {
 		}
 
-		// De methode die met JDBC aan de slag gaat moet een SQLException opvangen
-		// of gooien
+		//Alle CustomerSeries ontvangen
 		public ArrayList<CustomerSeries> getAll(){
 			ArrayList<CustomerSeries> CustomerSerieslijst = new ArrayList<CustomerSeries>();
 		try{			
@@ -59,6 +58,7 @@ public class CustomerSeriesDAO extends BaseDAO{
 	 				}
 	 				return CustomerSerieslijst;
 	}
+    //Alle CustomerSeries van een klant ophalen
 	public ArrayList<CustomerSeries> getCustomerSeriesbyCustomerID(int cd){
 		ArrayList<CustomerSeries> CustomerSerieslijst = new ArrayList<CustomerSeries>();
 	try{			
@@ -101,6 +101,7 @@ public class CustomerSeriesDAO extends BaseDAO{
  				}
  				return CustomerSerieslijst;
 }
+	//Informatie over Series+Email Notificaties ophalen van alle aan de klant gekoppelde CustomerSeries van airing Series
 	public ArrayList<Comb> getFinishedCustomerSeriesbyCustomerID(int cd, String date){
 		ArrayList<Comb> Comblijst = new ArrayList<Comb>();
 	try{			
@@ -165,6 +166,7 @@ public class CustomerSeriesDAO extends BaseDAO{
  				}
  				return Comblijst;
 }
+	//Informatie over Series+Email Notificaties ophalen van alle aan de klant gekoppelde CustomerSeries van afgelopen series
 	public ArrayList<Comb> getUnfinishedCustomerSeriesbyCustomerID(int cd, String date){
 		ArrayList<Comb> Comblijst = new ArrayList<Comb>();
 	try{			
@@ -229,7 +231,7 @@ public class CustomerSeriesDAO extends BaseDAO{
  				}
  				return Comblijst;
 }
-	
+	//Voeg CustomerSeries toe
 	public void addEntry(CustomerSeries cs){
 		try{			
 			Connection conn=super.getConnection();
@@ -251,6 +253,7 @@ public class CustomerSeriesDAO extends BaseDAO{
 			System.out.println(e);
 		}
 		}
+	//Verwijder CustomerSeries
 	public void deleteEntry(CustomerSeries cs){
 		try{			
 			Connection conn=super.getConnection();
@@ -272,6 +275,7 @@ public class CustomerSeriesDAO extends BaseDAO{
 			System.out.println(e);
 		}
 	}
+	//Update Score van een CustomerSeries
 	public void updateScore(CustomerSeries cs, int score){
 		try{			
 			Connection conn=super.getConnection();
@@ -293,6 +297,7 @@ public class CustomerSeriesDAO extends BaseDAO{
 			System.out.println(e);
 		}
 	}
+	//Update emailnotificaties van een CustomerSeries
 	public void updateEmail(CustomerSeries cs, String email){
 		try{			
 			Connection conn=super.getConnection();
