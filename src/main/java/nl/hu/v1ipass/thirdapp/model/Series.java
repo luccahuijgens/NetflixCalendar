@@ -84,5 +84,8 @@ public class  Series{
 	public String getSynopsis() {
 		return synopsis;
 	}
+	public String toString(){
+		return title+" + "+episodes;
+	}
 
 }

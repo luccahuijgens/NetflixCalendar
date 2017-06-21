@@ -27,40 +27,22 @@ public int getCustID() {
 	return CustID;
 }
 
-public void setCustID(int custID) {
-	CustID = custID;
-}
-
 public int getSeriesID() {
 	return SeriesID;
-}
-
-public void setSeriesID(int seriesID) {
-	SeriesID = seriesID;
 }
 
 public int getScore() {
 	return Score;
 }
 
-public void setScore(int score) {
-	Score = score;
-}
-
 public String getFinished() {
 	return Finished;
-}
-
-public void setFinished(String finished) {
-	Finished = finished;
 }
 
 public String getEmail() {
 	return Email;
 }
-
-public void setEmail(String email) {
-	Email = email;
+public String toString(){
+	return CustID+" + "+SeriesID;
 }
-
 }

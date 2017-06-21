@@ -14,17 +14,10 @@ public String getName() {
 	return name;
 }
 
-public void setName(String name) {
-	this.name = name;
-}
-
 public String getOriginDate() {
 	return originDate;
 }
-
-public void setOriginDate(String originDate) {
-	this.originDate = originDate;
+public String toString(){
+	return name+" + "+originDate;
 }
-
-
 }
