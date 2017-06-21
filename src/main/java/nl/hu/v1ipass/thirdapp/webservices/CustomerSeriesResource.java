@@ -26,16 +26,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import nl.hu.v1ipass.thirdapp.model.Comb;
 import nl.hu.v1ipass.thirdapp.model.Customer;
 import nl.hu.v1ipass.thirdapp.model.CustomerSeries;
 import nl.hu.v1ipass.thirdapp.model.CustomerSeriesService;
 import nl.hu.v1ipass.thirdapp.model.CustomerSeriesServiceProvider;
 import nl.hu.v1ipass.thirdapp.model.CustomerService;
 import nl.hu.v1ipass.thirdapp.model.CustomerServiceProvider;
-import nl.hu.v1ipass.thirdapp.model.Email;
-import nl.hu.v1ipass.thirdapp.model.EmailService;
-import nl.hu.v1ipass.thirdapp.model.EmailServiceProvider;
+
 import nl.hu.v1ipass.thirdapp.model.SerieServiceProvider;
 import nl.hu.v1ipass.thirdapp.model.Series;
 import nl.hu.v1ipass.thirdapp.model.SeriesService;
@@ -45,7 +42,6 @@ public class CustomerSeriesResource {
 CustomerService cs= CustomerServiceProvider.getCustomerService();
 SeriesService ss=SerieServiceProvider.getSeriesService();
 CustomerSeriesService css=CustomerSeriesServiceProvider.getCustomerService();
-EmailService es=EmailServiceProvider.getEmailService();
 
 @Path("{id}+{password}")
 @GET
@@ -124,16 +120,17 @@ public String FinishedSeriesByCustID(@PathParam("id") int code, @PathParam("pass
 	JsonArrayBuilder jab = Json.createArrayBuilder();
 	Date date = new Date();
 	String modifiedDate= new SimpleDateFormat("dd/MM/YY").format(date);
-	for (Comb c : css.getFinishedCustomerSeriesbyCustomerID(found,modifiedDate)) {
+	for (CustomerSeries custser: css.getFinishedCustomerSeriesbyCustomerID(found,modifiedDate)) {
+		Series s=ss.getSeriesbyCode(custser.getSeriesID());
 		JsonObjectBuilder job = Json.createObjectBuilder();
-		job.add("id", c.getSeriesid());
-		job.add("title", c.getTitle());
-		job.add("genre", c.getGenre());
-		job.add("episodes", c.getEpisodes());
-		job.add("score",c.getScore());
-		job.add("viewers", c.getViewers());
-		job.add("synopsis", c.getSynopsis());
-		job.add("myscore", c.getMyscore());
+		job.add("id", custser.getSeriesID());
+		job.add("title", s.getTitle());
+		job.add("genre", s.getGenre());
+		job.add("episodes", s.getEpisodes());
+		job.add("score",s.getScore());
+		job.add("viewers", s.getViewers());
+		job.add("synopsis", s.getSynopsis());
+		job.add("myscore", custser.getScore());
 		
 
 		jab.add(job);
@@ -156,16 +153,17 @@ public String UnfinishedSeriesByCustID(@PathParam("id") int code, @PathParam("pa
 	JsonArrayBuilder jab = Json.createArrayBuilder();
 	Date date = new Date();
 	String modifiedDate= new SimpleDateFormat("dd/MM/YY").format(date);
-	for (Comb c : css.getUnfinishedCustomerSeriesbyCustomerID(found,modifiedDate)) {
+	for (CustomerSeries custser: css.getUnfinishedCustomerSeriesbyCustomerID(found,modifiedDate)) {
+		Series s=ss.getSeriesbyCode(custser.getSeriesID());
 		JsonObjectBuilder job = Json.createObjectBuilder();
-		job.add("id", c.getSeriesid());
-		job.add("title", c.getTitle());
-		job.add("genre", c.getGenre());
-		job.add("episodes", c.getEpisodes());
-		job.add("score",c.getScore());
-		job.add("viewers", c.getViewers());
-		job.add("synopsis", c.getSynopsis());
-		job.add("email", c.getEmail());
+		job.add("id", custser.getSeriesID());
+		job.add("title", s.getTitle());
+		job.add("genre", s.getGenre());
+		job.add("episodes", s.getEpisodes());
+		job.add("score",s.getScore());
+		job.add("viewers", s.getViewers());
+		job.add("synopsis", s.getSynopsis());
+		job.add("email", custser.getEmail());
 		
 
 		jab.add(job);
@@ -271,10 +269,16 @@ public String updateEmail(@PathParam("CustomerId") int custid, @PathParam("Serie
 @GET
 @Path("sendmail/{CustomerId}")
 public String sendEmail(@PathParam("CustomerId") int custid) {
+	  Customer found=null;
 	  Date date = new Date();
 		String modifiedDate= new SimpleDateFormat("dd/MM/YY").format(date);
 		System.out.println(modifiedDate);
-	  for (Email e : es.getEmailbyCustomerID(custid, modifiedDate)) {
+		 for (Customer c : cs.getAllCustomers()) {
+			    if (c.getId() == custid) {
+			      found = c; break;
+			    }}
+	  for (CustomerSeries custs: css.getEmailbyCustomerID(found, modifiedDate)) {
+		  Series s=ss.getSeriesbyCode(custs.getSeriesID());
 		  String host = "smtp.gmail.com";
 	        String from = "luccah06071@gmail.com";
 	        String pass = "Burdeos1";
@@ -292,13 +296,13 @@ public String sendEmail(@PathParam("CustomerId") int custid) {
 	        Session session = Session.getInstance(props, new GMailAuthenticator(from, pass));
 	        MimeMessage message = new MimeMessage(session);
 	        Address fromAddress = new InternetAddress(from);
-	        Address toAddress = new InternetAddress(e.getEmail());
+	        Address toAddress = new InternetAddress(found.getEmail());
 
 	        message.setFrom(fromAddress);
 	        message.setRecipient(Message.RecipientType.TO, toAddress);
 
 	        message.setSubject("A Series you follow is about to end");
-	        message.setText("The following series you are following will end soon: "+e.getTitle());
+	        message.setText("The following series you are following will end soon: "+s.getTitle());
 	        Transport transport = session.getTransport("smtp");
 	        transport.connect(host, from, pass);
 	        message.saveChanges();
