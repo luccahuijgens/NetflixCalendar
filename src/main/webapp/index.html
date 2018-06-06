@@ -40,38 +40,26 @@
 </div>
   <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
     <script>
-    $("#login").click(function () {
+         $("#login").click(function () {
+	try{
     	var username=$("#username").val()
         var password=$("#password").val()
-        console.log("Succes!")
-        console.log(username+"+"+password);
     		
-    	var uri = "/thirdapp/restservices/customer/"+username+"+"+password;
-
+    	var uri = "/restservices/customer/"+username+"+"+password;
 		$.getJSON(uri, function(data){
 			if (data.length != 0){
-				var val = Math.floor(1000 + Math.random() * 9000);
-				$.getJSON("/thirdapp/restservices/customerseries/sendverif/"+username+"+"+val, function(data){
-				});
-				var person = prompt("Please enter the verification code we sent to your email:");
-
-				if (person == null || person == "") {
-				    txt = "User cancelled the prompt.";
-				}
-				if (person==val){
-					window.sessionStorage.setItem("user", data.id);
+				window.sessionStorage.setItem("user", data.id);
 				window.sessionStorage.setItem("password", data.password);
-				console.log(data.id);
 				alert("Login succesful!");
-				window.location = "/thirdapp/agenda.html";
+				window.location = "/agenda.html";
 			}
 			else{
-				alert("The code you entered was incorrect!")
+				alert("No matching combination of user & password found")
 			}
-			}
-
 		});	
-    });
+    }catch(err){
+       alert("No matching combination of user & password found")
+    }});
     </script>
 
 </body>
