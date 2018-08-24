@@ -3,6 +3,8 @@ package nl.hu.v1ipass.thirdapp.webservices;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.json.Json;
@@ -18,6 +20,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -32,7 +35,6 @@ import nl.hu.v1ipass.thirdapp.model.CustomerSeriesService;
 import nl.hu.v1ipass.thirdapp.model.CustomerSeriesServiceProvider;
 import nl.hu.v1ipass.thirdapp.model.CustomerService;
 import nl.hu.v1ipass.thirdapp.model.CustomerServiceProvider;
-
 import nl.hu.v1ipass.thirdapp.model.SerieServiceProvider;
 import nl.hu.v1ipass.thirdapp.model.Series;
 import nl.hu.v1ipass.thirdapp.model.SeriesService;
@@ -56,16 +58,14 @@ public String SeriesByCustID(@PathParam("id") int code, @PathParam("password") S
 	JsonArrayBuilder jab = Json.createArrayBuilder();
 	Date date = new Date();
 	String modifiedDate= new SimpleDateFormat("dd/MM/YY").format(date);
-	for (Series c : ss.getSeriesbyCustomerID(found, modifiedDate)) {
-		JsonObjectBuilder job = Json.createObjectBuilder();
-		job.add("id", c.getCode());
-		job.add("title", c.getTitle());
-		job.add("genre", c.getGenre());
-		job.add("episodes", c.getEpisodes());
-		job.add("score",c.getScore());
-		job.add("viewers", c.getViewers());
-		job.add("studio", c.getProductionstudio());
-		job.add("synopsis", c.getSynopsis());
+	for (CustomerSeries c : css.getUnfinishedCustomerSeriesbyCustomerID(found, modifiedDate)) {
+		JsonObjectBuilder job = createJson(c);
+		
+
+		jab.add(job);
+	}
+	for (CustomerSeries c : css.getFinishedCustomerSeriesbyCustomerID(found, modifiedDate)) {
+		JsonObjectBuilder job = createJson(c);
 		
 
 		jab.add(job);
@@ -209,32 +209,58 @@ public Response deleteCustomer(@PathParam("CustId") int CustId, @PathParam("Seri
   }
 }
 @PUT
-@Path("score/{CustomerId}+{password}/{SeriesId}+{Score}")
-public String updateScore(@PathParam("CustomerId") int custid, @PathParam("password") String password, @PathParam("SeriesId") int seriesid,
-        @PathParam("Score") int score) {
+@Path("/score")
+public Response updateScore(@FormParam("customer") int custid, @FormParam("password") String password, @FormParam("series") int seriesid,
+        @FormParam("score") int score) {
 	Customer found = null;
 	  Series found2=null;
-	  Date date = new Date();
-		String modifiedDate= new SimpleDateFormat("dd/MM/YY").format(date);
-		System.out.println(modifiedDate);
-		System.out.println("Succes!");
-		System.out.println(custid+" "+seriesid+" "+score);
+	  System.out.println(score);
+	  
 	  for (Customer c : cs.getAllCustomers()) {
 	    if (c.getId() == custid&&c.getPassword().equals(password)) {
 	      found = c; break;
 	    }
 	  }
-	  for (Series s : ss.getAllFinishedSeries(modifiedDate)) {
+	  for (Series s : ss.getAllSeries()) {
 		    if (s.getCode() == seriesid) {
 		      found2 = s; break;
 		    }
 		  }
-	  System.out.println(found.toString()+found2.toString());
+	  System.out.println(found.getName()+found2.getTitle());
 	  if (found == null||found2==null) {
-		    return ("Error: Series or Customer not found!");
+		  Map<String, String> messages = new HashMap<String, String>();
+	      messages.put("error", "Not found");
+		    return Response.status(404).entity(messages).build();
 		  } else {
 			  css.updateScore(found, found2, score);
-			  return ("Update succesful");
+			  return Response.ok().build();
+	      }
+	  }
+@PUT
+@Path("/status")
+public Response updateStatus(@FormParam("customer") int custid, @FormParam("password") String password, @FormParam("series") int seriesid,
+        @FormParam("status") String status) {
+	Customer found = null;
+	  Series found2=null;
+	  
+	  for (Customer c : cs.getAllCustomers()) {
+	    if (c.getId() == custid&&c.getPassword().equals(password)) {
+	      found = c; break;
+	    }
+	  }
+	  for (Series s : ss.getAllSeries()) {
+		    if (s.getCode() == seriesid) {
+		      found2 = s; break;
+		    }
+		  }
+	  System.out.println(found.getName()+found2.getTitle());
+	  if (found == null||found2==null) {
+		  Map<String, String> messages = new HashMap<String, String>();
+	      messages.put("error", "Not found");
+		    return Response.status(404).entity(messages).build();
+		  } else {
+			  css.updateStatus(found, found2, status);
+			  return Response.ok().build();
 	      }
 	  }
 @PUT
@@ -363,5 +389,37 @@ private JsonObjectBuilder csToJson(CustomerSeries c) {
 	job.add("finish", c.getFinished());
 	job.add("email",c.getEmail());
 	return job;
+}
+public JsonObjectBuilder createJson(CustomerSeries c) {
+	JsonObjectBuilder job = Json.createObjectBuilder();
+	try {
+Series series=ss.getSeriesbyCode(c.getSeriesID());
+Date date = new Date();
+Date modifiedDate= new SimpleDateFormat("yyyy-MM-dd").parse(series.getEnddate().substring(0,10));
+job.add("id", series.getCode());
+job.add("title", series.getTitle());
+job.add("genre", series.getGenre());
+job.add("episodes", series.getEpisodes());
+job.add("duration", series.getDuration());
+job.add("airday", series.getAirday());
+if (modifiedDate.before(date)) {
+	job.add("status", "Finished airing");
+}else {
+	job.add("status", "Currently airing");
+}
+job.add("start", series.getStartdate().substring(0,10));
+job.add("end", series.getEnddate().substring(0, 10));
+job.add("viewers", series.getViewers());
+job.add("studio", series.getProductionstudio());
+job.add("synopsis", series.getSynopsis());
+job.add("score",c.getScore());
+job.add("status", c.getStatus());
+job.add("email", c.getEmail());
+}
+catch(java.text.ParseException e) {
+	e.printStackTrace();
+}
+return job;
+	
 }
 }

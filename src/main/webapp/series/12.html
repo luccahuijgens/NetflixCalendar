@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="series.css">
+<style>
+<style>body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif};
+</style>
+<body class="w3-light-grey">
+<!-- Top menu -->
+<div class="topnav">
+  <a class="active" href="index.html"><img src="/thirdapp/img/logo.png" style=height:25px;/></a>
+  <a href="/thirdapp/series.html">Browse Series</a>
+  <a href="/thirdapp/currentlyairing.html">Currently Airing</a>
+  <a href="/thirdapp/agenda.html">View Agenda</a>
+  <a href="/thirdapp/mylist.html">Manage My Series</a>
+  <a href="/thirdapp/logout.html" style=float:right;>Logout</a>
+</div>
+<!-- Page Container -->
+<div class="w3-content w3-margin-top" style="max-width:1400px;margin-top:50px;">
+
+  <!-- The Grid -->
+  <div class="w3-row-padding">
+  
+    <!-- Left Column -->
+    <div id="info" style=padding:8px;float:left;width:22%;margin-left:17%;>
+
+    <!-- End Left Column -->
+    </div>
+
+    <!-- Right Column -->
+    <div style=padding:8px;float:left;width:44%;margin-right:17%;>
+    
+      <div id="synopsis" class="w3-container w3-card w3-white w3-margin-bottom">
+      </div>
+
+      <div id="reviews" class="w3-container w3-card w3-white">
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-pencil fa-fw w3-margin-right w3-xxlarge w3-text-red"></i>Reviews</h2>
+      </div>
+
+    <!-- End Right Column -->
+    </div>
+    
+  <!-- End Grid -->
+  </div>
+  
+  <!-- End Page Container -->
+</div>
+
+  <!-- Footer -->
+   <footer class="w3-container w3-center w3-margin-top" style=color:white;background-color:red;><br>
+    <p>NetflixApp is a project by Lucca Huijgens, created with W3Schools CSS.<br><br></p>
+  </footer>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<script>
+function loadseries(){
+	$.getJSON("/thirdapp/restservices/series/12", function(series){
+		var user=window.sessionStorage.getItem("user");
+		    $("#info").append(
+		 	        "<div class=\"w3-white w3-text-grey w3-card-4\">"+
+		 	        "<div class=w3-display-container>"+
+		 	          "<img src=/thirdapp/img/"+series.id+".jpg style=width:100% alt=Avatar>"+
+		 	          "<div class=\"w3-display-bottomleft w3-container w3-text-black\"></div></div>"+
+		 	        "<div class=w3-container><br>"+
+		 	        "<b>About</b><hr>"+
+		 	          "<p><b>Episodes:</b> "+series.episodes+"</p>"+
+		 	          "<p><b>Status:</b> "+series.status+"</p>"+
+		 	          "<p><b>Start Date:</b> "+series.start+"</p>"+
+		 	          "<p><b>End Date:</b> "+series.end+"</p>"+
+		 	             "<p><b>Broadcast Day:</b> "+series.airday+"</p>"+
+		 	            "<p><b>Studio:</b> <a href=/thirdapp/studios/"+series.studio+".html>"+series.studio+"</a></p>"+
+		 	          "<p><b>Genre:</b> "+series.genre+"</p>"+
+		 	          "<p><b>Duration:</b> "+series.duration+"</p>"+
+		 	          "</div><div class=w3-container>"+
+		 			"<br><b>Stats</b><hr>"+
+		 	          "<p><b>Score:</b> &emsp;"+series.score+"</p>"+
+		 	          "<p><b>Viewers:</b> "+series.viewers+"</p><hr>"+
+		 			"<input type=button value=\"Add to to My Series\" data-custid="+user+" data-seriesid="+series.id+" <br><br><br>"+
+		 	      "</div></div><br>"	
+		 	);
+		    document.title="Netflix - "+series.title;
+		  $("#synopsis").append(
+				  "<h2 class=\"w3-text-grey w3-padding-16\"><i class=\"fa fa-file-text-o fa-fw w3-margin-right w3-xxlarge w3-text-red\"></i>Synopsis</h2>"+
+			      series.synopsis+"<br><br>");
+	})};
+loadseries();
+</script>
+<script>
+function loadreviews(){
+	$.getJSON("/thirdapp/restservices/reviews/1", function(data){
+		$.each(data, function(i, review){
+			$("#reviews").append(
+			"<div class=w3-container>"+
+	          "<h5 class=w3-opacity><b>"+review.customer+"</b></h5>"+
+	          "<h6 class=w3-text-red><i class=\"fa fa-list-ol fa-fw w3-margin-right\"></i>Score: "+review.score+"</h6>"+
+	          "<p>"+review.content+"</p><hr></div>");
+		});
+
+});
+}
+loadreviews();
+</script>
+<script>
+$("#info").on('click', 'input[type=button]', function () {
+var user=window.sessionStorage.getItem("user");
+if (user!=null){
+   var custid = $(this).data('custid');
+   var seriesid = $(this).data('seriesid');
+	    var data = { "CustomerID": custid, "SeriesID": seriesid }
+	    var JSONdata = JSON.stringify(data);
+	    console.log(data);
+	    $.post("/thirdapp/restservices/customerseries", JSONdata, function(response) {
+	        $("#response").text(JSON.stringify(response));
+	        alert("This Series has been added to your list!");
+	    }); 
+}else{
+alert("You need to be logged in to add series to your list.");
+}
+});
+</script>
+</html>

@@ -1,146 +1,160 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>My Netflix Agenda</title>
-<link rel="stylesheet" href="css/agenda.css">
+<title>Netflix - My Agenda</title>
+<link rel="stylesheet" href="css/series.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
 </head>
+<style>body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif};
+</style>
 <body>
 
-<ul id="header">
-  <li><a class="active" href="series.html">Browse Airing Series</a></li>
-  <li><a href="mylist.html">View Followed Series</a></li>
-  <li><a href="mycompleted.html">View Completed Series</a></li>
-  <li><a href="email.html">Manage E-mail Notifications</a></li>
-   <li style="float:right"><a class="active" href="logout.html">Logout</a></li>
-</ul>
-<div id="seriesList">
- <h1>My Netflix Agenda</h1>
- <table id="monday">
- <tr>
- 	<th>Monday&emsp;</th>
-  </tr>
- </table>
- <table id="tuesday">
- <tr>
- 	<th>Tuesday&emsp;</th>
-  </tr>
- </table>
- <table id="wednesday">
- <tr>
- 	<th>Wednesday&emsp;</th>
-  </tr>
- </table>
- <table id="thursday">
- <tr>
- 	<th>Thursday&emsp;</th>
-  </tr>
- </table>
- <table id="friday">
- <tr>
- 	<th>Friday&emsp;</th>
-  </tr>
- </table>
- <table id="saturday">
- <tr>
- 	<th>Saturday&emsp;</th>
-  </tr>
- </table>
- <table id="sunday">
- <tr>
- 	<th>Sunday&emsp;</th>
-  </tr>
- </table>
- </div>
+<!-- Top menu -->
+<div class="topnav">
+  <a class="active" href="index.html"><img src="img/logo.png" style=height:25px;/></a>
+  <a href="series.html">Browse Series</a>
+  <a href="currentlyairing.html">Currently Airing</a>
+  <a class="current" href="agenda.html">View Agenda</a>
+  <a href="mylist.html">Manage My Series</a>
+  <a href="logout.html" style=float:right;>Logout</a>
+</div>
+<!-- !PAGE CONTENT! -->
+<div class="w3-main w3-content w3-padding" style="max-width:1400px;">
+
+   <!-- The Grid -->
+  <div class="w3-row-padding">
+  
+
+    <!-- Right Column -->
+    <div style=padding:8px;float:left;width:70%;margin-right:15%;margin-left:15%;>
+    
+      <div id="monday" class="w3-container w3-card w3-white w3-margin-bottom">
+       <h2 class="w3-text-grey"><i class="fa fa-file-text-o fa-fw w3-margin-right w3-xxlarge w3-text-red"></i>Monday</h2>
+      </div>
+      
+      <div id="tuesday" class="w3-container w3-card w3-white w3-margin-bottom">
+       <h2 class="w3-text-grey"><i class="fa fa-file-text-o fa-fw w3-margin-right w3-xxlarge w3-text-red"></i>Tuesday</h2>
+      </div>
+      
+      <div id="wednesday" class="w3-container w3-card w3-white w3-margin-bottom">
+       <h2 class="w3-text-grey"><i class="fa fa-file-text-o fa-fw w3-margin-right w3-xxlarge w3-text-red"></i>Wednesday</h2>
+      </div>
+      
+      <div id="thursday" class="w3-container w3-card w3-white w3-margin-bottom">
+       <h2 class="w3-text-grey"><i class="fa fa-file-text-o fa-fw w3-margin-right w3-xxlarge w3-text-red"></i>Thursday</h2>
+      </div>
+      
+      <div id="friday" class="w3-container w3-card w3-white w3-margin-bottom">
+       <h2 class="w3-text-grey"><i class="fa fa-file-text-o fa-fw w3-margin-right w3-xxlarge w3-text-red"></i>Friday</h2>
+      </div>
+      
+      <div id="saturday" class="w3-container w3-card w3-white w3-margin-bottom">
+       <h2 class="w3-text-grey"><i class="fa fa-file-text-o fa-fw w3-margin-right w3-xxlarge w3-text-red"></i>Saturday</h2>
+      </div>
+      
+      <div id="sunday" class="w3-container w3-card w3-white w3-margin-bottom">
+       <h2 class="w3-text-grey"><i class="fa fa-file-text-o fa-fw w3-margin-right w3-xxlarge w3-text-red"></i>Sunday</h2>
+      </div>
+
+    <!-- End Right Column -->
+    </div>
+    
+  <!-- End Grid -->
+  </div>
+<!-- End page content -->
+</div>
+
+  <!-- Footer -->
+   <footer class="w3-container w3-center w3-margin-top" style=color:white;background-color:red;><br>
+    <p>NetflixApp is a project by Lucca Huijgens, created with W3Schools CSS.<br><br></p>
+  </footer>
+  
 <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 <script>
 function loadSeries(){
 		var user=window.sessionStorage.getItem("user");
 		var password=window.sessionStorage.getItem("password");
+		var text7="";
 		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Monday", function(data){
-			if ( data.length == 0 ) {
-				$("#monday").append(
-						"<tr><td><u>No New Episodes</u><br><br></td></tr>");}
-		    else{
 			$.each(data, function(i, series){
-				$("#monday").append(
-				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
-			});}
-
+				text7+="<a href=series/"+series.id+".html><img src=img/"+series.id+".jpg alt=Sandwich style=width:25%;padding:8px;></a>"
+			});
+			text7+="<br><br>";
+			if(text7=="<br><br>"){
+				text7="There are no episodes airing today.<br><br>"
+			}
+			$("#monday").append(text7)
 	});
+		var text6="";
 		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Tuesday", function(data){
-			if ( data.length == 0 ) {
-				$("#tuesday").append(
-						"<tr><td><u>No New Episodes</u><br><br></td></tr>");}
-			else{
 			$.each(data, function(i, series){
-				$("#tuesday").append(
-				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
-			});}
-
+				text6+="<a href=series/"+series.id+".html><img src=img/"+series.id+".jpg alt=Sandwich style=width:25%;padding:8px;></a>"
+			});
+			text6+="<br><br>";
+			if(text6=="<br><br>"){
+				text6="There are no episodes airing today.<br><br>"
+			}
+			$("#tuesday").append(text6)
 	});
+		var text5="";
 		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Wednesday", function(data){
-			if ( data.length == 0 ) {
-				$("#wednesday").append(
-						"<tr><td><u>No New Episodes</u><br><br></td></tr>");
-		    }
-			else{
 			$.each(data, function(i, series){
-				$("#wednesday").append(
-				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
-			});}
-
+				text5+="<a href=series/"+series.id+".html><img src=img/"+series.id+".jpg alt=Sandwich style=width:25%;padding:8px;></a>"
+			});
+			text5+="<br><br>";
+			if(text5=="<br><br>"){
+				text5="There are no episodes airing today.<br><br>"
+			}
+			$("#wednesday").append(text5)
 	});
-		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Thursday", function(data){
-			if ( data.length == 0 ) {
-				$("#thursday").append(
-						"<tr><td><u>No New Episodes</u><br><br></td></tr>");
-		    }
-			else{
-			$.each(data, function(i, series){
-				$("#thursday").append(
-				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
-			});}
-
-	});
+		var text3="";
 		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Friday", function(data){
-			if ( data.length == 0 ) {
-				$("#friday").append(
-						"<tr><td><u>No New Episodes</u><br><br></td></tr>");
-		    }
-			else{
 			$.each(data, function(i, series){
-				$("#friday").append(
-				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
-			});}
-
-	});
+				text3+="<a href=series/"+series.id+".html><img src=img/"+series.id+".jpg alt=Sandwich style=width:25%;padding:8px;></a>"
+			});
+			text3+="<br><br>";
+			if(text3=="<br><br>"){
+				text3="There are no episodes airing today.<br><br>"
+			}
+			$("#friday").append(text3)
+			});	
+		var text4="";
+	$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Thursday", function(data){
+		$.each(data, function(i, series){
+			text4+="<a href=series/"+series.id+".html><img src=img/"+series.id+".jpg alt=Sandwich style=width:25%;padding:8px;></a>"
+		});
+		text4+="<br><br>";
+		if(text4=="<br><br>"){
+			text4="There are no episodes airing today.<br><br>"
+		}
+		$("#thursday").append(text4)
+});
+		var text2="";
 		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Saturday", function(data){
-			if ( data.length == 0 ) {
-				$("#saturday").append(
-						"<tr><td><u>No New Episodes</u><br><br></td></tr>");
-		    }
-			else{
 			$.each(data, function(i, series){
-				$("#saturday").append(
-				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
-			});}
-
+				text2+="<a href=series/"+series.id+".html><img src=img/"+series.id+".jpg alt=Sandwich style=width:25%;padding:8px;></a>"
+			});
+			text2+="<br><br>";
+			if(text2=="<br><br>"){
+				text2="There are no episodes airing today.<br><br>"
+			}
+			$("#saturday").append(text2)
 	});
+		var text="";
 		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password+"/Sunday", function(data){
-			if ( data.length == 0 ) {
-				$("#sunday").append(
-						"<tr><td><u>No New Episodes</u><br><br></td></tr>");
-		    }
-			else{
 			$.each(data, function(i, series){
-				$("#sunday").append(
-				"<tr><td><b>New Episode: <br>"+series.title+"</b><br></td></tr>");
-			});}
-
+				text+="<a href=series/"+series.id+".html><img src=img/"+series.id+".jpg alt=Sandwich style=width:25%;padding:8px;></a>"
+			});
+			text+="<br><br>";
+			if(text=="<br><br>"){
+				text="There are no episodes airing today.<br><br>"
+			}
+			$("#sunday").append(text)
 	});
 }
-</script>
-<script>
 loadSeries()
 </script>
 <script>
@@ -150,7 +164,15 @@ loadSeries()
 			console.log("An error occured!")	
 		}});
 </script>
+<script>
+var user=window.sessionStorage.getItem("user");
+if(user!=null){
+	 $(".topnav").append("<a href=logout.html style=float:right;>Logout</a>")
+}else{
+	 alert("You need to be logged in to view your agenda.");
+	 window.location = "login.html";
+}
+</script>
 
 
-</body>
 </html>

@@ -19,6 +19,65 @@ public class SeriesDAO extends BaseDAO{
 	public SeriesDAO(){}
 	
 	// De methode die met JDBC aan de slag gaat moet een SQLException opvangen of gooien
+	public ArrayList<Series> getAll(){
+		ArrayList<Series>Serieslijst=new ArrayList<Series>();
+		// Leg de connectie met de database
+		try{
+			Connection conn=super.getConnection();
+				//System.out.println("Connection made");
+
+				// Een eerste SQL statement maken
+				Statement stmt = conn.createStatement();
+				
+				// Een tweede statement maken dat een resultaat oplevert
+ 				String queryText = "SELECT * FROM Series";
+ 				
+ 				// Een tweede statement uitvoeren
+ 				ResultSet rs = stmt.executeQuery(queryText);
+ 				
+ 				int code;
+ 				String title;
+ 				String genre;
+ 				int episodes;
+ 				String startdate;
+ 				String enddate;
+ 				String airday;
+ 				int duration;
+ 				double score;
+ 				String productionstudio;
+ 				int rating;
+ 				int viewers;
+ 				String synopsis;
+ 				Series Series;
+ 				
+ 				while (rs.next()) {
+ 					
+ 					code = rs.getInt("ID");	
+ 					title = rs.getString("title");
+ 					genre= rs.getString("genre");
+ 					episodes = rs.getInt("episodes");	
+ 					startdate = rs.getString("startdate");
+ 					enddate= rs.getString("enddate");
+ 					airday = rs.getString("airday");
+ 					duration = rs.getInt("duration");
+ 					score = rs.getDouble("score");	
+ 					productionstudio = rs.getString("studio");
+ 					rating = rs.getInt("rating");
+ 					viewers= rs.getInt("viewers");
+ 					synopsis=rs.getString("synopsis");
+ 					Series=new Series(code, title, genre, episodes, startdate, enddate, airday, duration, score, productionstudio, rating, viewers,synopsis);
+ 					Serieslijst.add(Series);
+ 					}
+ 				// De resultset, het statement en de verbinding sluiten
+ 				rs.close();
+ 				stmt.close();
+ 				conn.close();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return Serieslijst;
+ 	}
 	
 	public ArrayList<Series> getAiringSeries(String date){
 		ArrayList<Series>Serieslijst=new ArrayList<Series>();
@@ -44,7 +103,7 @@ public class SeriesDAO extends BaseDAO{
  				String enddate;
  				String airday;
  				int duration;
- 				int score;
+ 				double score;
  				String productionstudio;
  				int rating;
  				int viewers;
@@ -61,7 +120,7 @@ public class SeriesDAO extends BaseDAO{
  					enddate= rs.getString("enddate");
  					airday = rs.getString("airday");
  					duration = rs.getInt("duration");
- 					score = rs.getInt("score");	
+ 					score = rs.getDouble("score");	
  					productionstudio = rs.getString("studio");
  					rating = rs.getInt("rating");
  					viewers= rs.getInt("viewers");
@@ -103,7 +162,7 @@ public class SeriesDAO extends BaseDAO{
  				String enddate;
  				String airday;
  				int duration;
- 				int score;
+ 				double score;
  				String productionstudio;
  				int rating;
  				int viewers;
@@ -120,7 +179,7 @@ public class SeriesDAO extends BaseDAO{
  					enddate= rs.getString("enddate");
  					airday = rs.getString("airday");
  					duration = rs.getInt("duration");
- 					score = rs.getInt("score");	
+ 					score = rs.getDouble("score");	
  					productionstudio = rs.getString("studio");
  					rating = rs.getInt("rating");
  					viewers= rs.getInt("viewers");
@@ -162,7 +221,7 @@ public class SeriesDAO extends BaseDAO{
  				String enddate;
  				String airday;
  				int duration;
- 				int score;
+ 				double score;
  				String productionstudio;
  				int rating;
  				int viewers;
@@ -179,7 +238,7 @@ public class SeriesDAO extends BaseDAO{
  					enddate= rs.getString("enddate");
  					airday = rs.getString("airday");
  					duration = rs.getInt("duration");
- 					score = rs.getInt("score");	
+ 					score = rs.getDouble("score");	
  					productionstudio = rs.getString("studio");
  					rating = rs.getInt("rating");
  					viewers= rs.getInt("viewers");
@@ -221,7 +280,7 @@ public class SeriesDAO extends BaseDAO{
 	 				String enddate;
 	 				String airday;
 	 				int duration;
-	 				int score;
+	 				double score;
 	 				String productionstudio;
 	 				int rating;
 	 				int viewers;
@@ -238,7 +297,7 @@ public class SeriesDAO extends BaseDAO{
 	 					enddate= rs.getString("enddate");
 	 					airday = rs.getString("airday");
 	 					duration = rs.getInt("duration");
-	 					score = rs.getInt("score");	
+	 					score = rs.getDouble("score");	
 	 					productionstudio = rs.getString("studio");
 	 					rating = rs.getInt("rating");
 	 					viewers= rs.getInt("viewers");
@@ -279,7 +338,7 @@ public class SeriesDAO extends BaseDAO{
 	 				String enddate;
 	 				String airday;
 	 				int duration;
-	 				int score;
+	 				double score;
 	 				String productionstudio;
 	 				int rating;
 	 				int viewers;
@@ -296,7 +355,7 @@ public class SeriesDAO extends BaseDAO{
 	 					enddate= rs.getString("enddate");
 	 					airday = rs.getString("airday");
 	 					duration = rs.getInt("duration");
-	 					score = rs.getInt("score");	
+	 					score = rs.getDouble("score");	
 	 					productionstudio = rs.getString("studio");
 	 					rating = rs.getInt("rating");
 	 					viewers= rs.getInt("viewers");
@@ -337,7 +396,7 @@ public class SeriesDAO extends BaseDAO{
 	 				String enddate;
 	 				String airday;
 	 				int duration;
-	 				int score;
+	 				double score;
 	 				String productionstudio;
 	 				int rating;
 	 				int viewers;
@@ -354,7 +413,7 @@ public class SeriesDAO extends BaseDAO{
 	 					enddate= rs.getString("enddate");
 	 					airday = rs.getString("airday");
 	 					duration = rs.getInt("duration");
-	 					score = rs.getInt("score");	
+	 					score = rs.getDouble("score");	
 	 					productionstudio = rs.getString("studio");
 	 					rating = rs.getInt("rating");
 	 					viewers= rs.getInt("viewers");

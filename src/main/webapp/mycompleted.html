@@ -36,7 +36,7 @@ function loadSeries(){
 		$.getJSON("/restservices/customerseries/"+user+"+"+password+"/finished", function(data){
 			$.each(data, function(i, series){
 				$("#series").append(
-				"<tr><td><center><img src=img/"+series.id+".jpg border=3 height=320 width=225></img></center>&emsp;<br></td>"
+				"<tr><td><center><img src=img/"+series.id+".jpg border=3 style=width:30%;></img></center>&emsp;<br></td>"
 				+"<td><b>"+series.title+"</b>&emsp;<br></td>"
 				+"<td>"+series.genre+"&emsp;<br></td>"
 				+"<td>"+series.episodes+"&emsp;<br></td>"
@@ -60,7 +60,7 @@ $("#series").on('click', 'input[type=button]', function () {
     var intscore=parseInt(score);
     if (intscore>0 && intscore<11){
 	
-	var uri = "/restservices/customerseries/score/"+user+"+"+password+"/"+seriesid+"+"+intscore;
+	var uri = "/restservices/customerseries/score?customer="+user+"&password="+password+"&series="+seriesid+"&score="+intscore;
 
 	    $.ajax(uri, { 
 	        type: "put", 

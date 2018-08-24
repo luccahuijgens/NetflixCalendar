@@ -35,16 +35,18 @@ public class CustomerSeriesDAO extends BaseDAO{
 	 				int score;
 	 				String finished;
 	 				String email;
+	 				String status;
 	 				CustomerSeries cs;
 	 				
 	 				while (rs.next()) {
 	 					
 	 					custid = rs.getInt("CUSTOMERID");	
 	 					seriesid = rs.getInt("SERIESID");	
-	 					score = rs.getInt("score");	
+	 					score = rs.getInt("myscore");	
 	 					finished = rs.getString("FINISHED");
 	 					email=rs.getString("email_not");
-	 					cs=new CustomerSeries(custid, seriesid, score, finished, email);
+	 					status=rs.getString("status");
+	 					cs=new CustomerSeries(custid, seriesid, score, finished, email,status);
 	 					CustomerSerieslijst.add(cs);
 	 					}
 	 				// De resultset, het statement en de verbinding sluiten
@@ -78,16 +80,18 @@ public class CustomerSeriesDAO extends BaseDAO{
  				int score;
  				String finished;
  				String email;
+ 				String status;
  				CustomerSeries cs;
  				
  				while (rs.next()) {
  					
  					custid = rs.getInt("CUSTOMERID");	
  					seriesid = rs.getInt("SERIESID");	
- 					score = rs.getInt("score");	
+ 					score = rs.getInt("myscore");	
  					finished = rs.getString("FINISHED");
  					email=rs.getString("email_not");
- 					cs=new CustomerSeries(custid, seriesid, score, finished, email);
+ 					status=rs.getString("status");
+ 					cs=new CustomerSeries(custid, seriesid, score, finished, email,status);
  					CustomerSerieslijst.add(cs);
  					}
  				// De resultset, het statement en de verbinding sluiten
@@ -102,7 +106,7 @@ public class CustomerSeriesDAO extends BaseDAO{
 }
 	//Informatie over Series+Email Notificaties ophalen van alle aan de klant gekoppelde CustomerSeries van airing Series
 	public ArrayList<CustomerSeries> getFinishedCustomerSeriesbyCustomerID(int cd, String date){
-		ArrayList<CustomerSeries> Comblijst = new ArrayList<CustomerSeries>();
+		ArrayList<CustomerSeries> CustomerSerieslijst = new ArrayList<CustomerSeries>();
 	try{			
 	Connection conn=super.getConnection();
 			
@@ -117,20 +121,23 @@ public class CustomerSeriesDAO extends BaseDAO{
  				
  				int custid;
  				int seriesid;
- 				int myscore;
- 				String email;
+ 				int score;
  				String finished;
+ 				String email;
+ 				String status;
+ 				CustomerSeries cs;
  				
- 				while (rs.next()) {	
-
+ 				while (rs.next()) {
+ 					
  					custid = rs.getInt("CUSTOMERID");	
  					seriesid = rs.getInt("SERIESID");	
- 					myscore = rs.getInt("myscore");	
- 					finished=rs.getString("FINISHED");
+ 					score = rs.getInt("myscore");	
+ 					finished = rs.getString("FINISHED");
  					email=rs.getString("email_not");
- 					CustomerSeries cs=new CustomerSeries(custid,seriesid,myscore,finished,email);
- 					Comblijst.add(cs);
- 				}
+ 					status=rs.getString("status");
+ 					cs=new CustomerSeries(custid, seriesid, score, finished, email,status);
+ 					CustomerSerieslijst.add(cs);
+ 					}
  				// De resultset, het statement en de verbinding sluiten
  				rs.close();
  				stmt.close();
@@ -139,11 +146,11 @@ public class CustomerSeriesDAO extends BaseDAO{
  				catch (SQLException e){
  					e.printStackTrace();
  				}
- 				return Comblijst;
+ 				return CustomerSerieslijst;
 }
 	//Informatie over Series+Email Notificaties ophalen van alle aan de klant gekoppelde CustomerSeries van afgelopen series
 	public ArrayList<CustomerSeries> getUnfinishedCustomerSeriesbyCustomerID(int cd, String date){
-		ArrayList<CustomerSeries> Comblijst = new ArrayList<CustomerSeries>();
+		ArrayList<CustomerSeries> CustomerSerieslijst = new ArrayList<CustomerSeries>();
 	try{			
 	Connection conn=super.getConnection();
 			
@@ -158,20 +165,23 @@ public class CustomerSeriesDAO extends BaseDAO{
  				
  				int custid;
  				int seriesid;
- 				int myscore;
- 				String email;
+ 				int score;
  				String finished;
+ 				String email;
+ 				String status;
+ 				CustomerSeries cs;
  				
- 				while (rs.next()) {	
-
+ 				while (rs.next()) {
+ 					
  					custid = rs.getInt("CUSTOMERID");	
  					seriesid = rs.getInt("SERIESID");	
- 					myscore = rs.getInt("myscore");	
- 					finished=rs.getString("FINISHED");
+ 					score = rs.getInt("myscore");	
+ 					finished = rs.getString("FINISHED");
  					email=rs.getString("email_not");
- 					CustomerSeries cs=new CustomerSeries(custid,seriesid,myscore,finished,email);
- 					Comblijst.add(cs);
- 				}
+ 					status=rs.getString("status");
+ 					cs=new CustomerSeries(custid, seriesid, score, finished, email,status);
+ 					CustomerSerieslijst.add(cs);
+ 					}
  				// De resultset, het statement en de verbinding sluiten
  				rs.close();
  				stmt.close();
@@ -180,10 +190,10 @@ public class CustomerSeriesDAO extends BaseDAO{
  				catch (SQLException e){
  					e.printStackTrace();
  				}
- 				return Comblijst;
+ 				return CustomerSerieslijst;
 }
 	public ArrayList<CustomerSeries> getEmailbyCustomerID(int cd, String date){
-		ArrayList<CustomerSeries> Comblijst = new ArrayList<CustomerSeries>();
+		ArrayList<CustomerSeries> CustomerSerieslijst = new ArrayList<CustomerSeries>();
 	try{			
 	Connection conn=super.getConnection();
 			
@@ -198,19 +208,22 @@ public class CustomerSeriesDAO extends BaseDAO{
  				
  				int custid;
  				int seriesid;
- 				int myscore;
- 				String email;
+ 				int score;
  				String finished;
+ 				String email;
+ 				String status;
+ 				CustomerSeries cs;
  				
- 				while (rs.next()) {	
-
+ 				while (rs.next()) {
+ 					
  					custid = rs.getInt("CUSTOMERID");	
  					seriesid = rs.getInt("SERIESID");	
- 					myscore = rs.getInt("myscore");	
- 					finished=rs.getString("FINISHED");
+ 					score = rs.getInt("myscore");	
+ 					finished = rs.getString("FINISHED");
  					email=rs.getString("email_not");
- 					CustomerSeries cs=new CustomerSeries(custid,seriesid,myscore,finished,email);
- 					Comblijst.add(cs);
+ 					status=rs.getString("status");
+ 					cs=new CustomerSeries(custid, seriesid, score, finished, email,status);
+ 					CustomerSerieslijst.add(cs);
  					String query="Update CustomerSeries set finished='Yes' where customerid="+cd+" AND seriesid="+seriesid;
  					stmt.executeQuery(query);
  				}
@@ -222,7 +235,7 @@ public class CustomerSeriesDAO extends BaseDAO{
  				catch (SQLException e){
  					e.printStackTrace();
  				}
- 				return Comblijst;
+ 				return CustomerSerieslijst;
 }
 	//Voeg CustomerSeries toe
 	public void addEntry(CustomerSeries cs){
@@ -234,7 +247,7 @@ public class CustomerSeriesDAO extends BaseDAO{
 						Statement stmt = conn.createStatement();
 						
 						// Een tweede statement maken dat een resultaat oplevert
-		 				String queryText = "insert into customerseries values("+cs.getCustID()+", "+cs.getSeriesID()+",0, 'No','No')";
+		 				String queryText = "insert into customerseries values("+cs.getCustID()+", "+cs.getSeriesID()+",0, 'No','No','PTW')";
 		 				
 		 				// Een tweede statement uitvoeren
 		 				stmt.executeQuery(queryText);
@@ -272,7 +285,6 @@ public class CustomerSeriesDAO extends BaseDAO{
 	public void updateScore(CustomerSeries cs, int score){
 		try{			
 			Connection conn=super.getConnection();
-						System.out.println("Ready to delete");
 					
 						// Een eerste SQL statement maken
 						Statement stmt = conn.createStatement();
@@ -300,7 +312,7 @@ public class CustomerSeriesDAO extends BaseDAO{
 						Statement stmt = conn.createStatement();
 						
 						// Een tweede statement maken dat een resultaat oplevert
-		 				String queryText = "update customerseries set email_not='"+email+"'where customerid="+cs.getCustID()+"AND seriesid="+cs.getSeriesID();
+		 				String queryText = "update customerseries set email_not='"+email+"' where customerid="+cs.getCustID()+" AND seriesid="+cs.getSeriesID();
 		 				
 		 				// Een tweede statement uitvoeren
 		 				stmt.executeQuery(queryText);
@@ -311,5 +323,26 @@ public class CustomerSeriesDAO extends BaseDAO{
 		catch(Exception e){
 			System.out.println(e);
 		}
+	}
+
+	public void updateStatus(CustomerSeries cs, String status) {
+			try{			
+				Connection conn=super.getConnection();
+						
+							// Een eerste SQL statement maken
+							Statement stmt = conn.createStatement();
+							
+							// Een tweede statement maken dat een resultaat oplevert
+			 				String queryText = "update customerseries set status='"+status+"' where customerid="+cs.getCustID()+" AND seriesid="+cs.getSeriesID();
+			 				
+			 				// Een tweede statement uitvoeren
+			 				stmt.executeQuery(queryText);
+			 				conn.commit();
+			 				stmt.close();
+			 				conn.close();
+			 }
+			catch(Exception e){
+				System.out.println(e);
+			}
 	}
 }

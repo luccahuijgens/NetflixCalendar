@@ -1,66 +1,106 @@
 <!DOCTYPE html>
-<html >
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Netflix Login</title>
-  <link rel="stylesheet" href="css/style.css">
-  <style>
-  body {
-    background-image: url("img/index.jpg");
-}
-.form input[type="button"] {
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  outline: 0;
-  background: Red;
-  width: 100%;
-  border: 0;
-  padding: 15px;
-  color: #FFFFFF;
-  font-size: 14px;
-  -webkit-transition: all 0.3 ease;
-  transition: all 0.3 ease;
-  cursor: pointer;
-}
-.form input[type="button"]:hover,.form input[type="button"]:active,.form input[type="button"]:focus {
-  background: LightCoral;
-}
-</style>
+<title>Netflix - All your favorite series in one place</title>
+<link rel="stylesheet" href="css/series.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
 </head>
-
+<style>body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif};
+</style>
 <body>
-  <div class="login-page">
-  <div class="form">
-    <form class="login-form">
-      <input type="text" id="username" placeholder="username"/>
-      <input type="password" id="password" placeholder="password"/>
-      <input type="button" id="login"/ value="login">
-    </form>
-  </div>
+
+<!-- Top menu -->
+<div class="topnav">
+  <a class="active" href="index.html"><img src="img/logo.png" style=height:25px;/></a>
+  <a href="series.html">Browse Series</a>
+  <a href="currentlyairing.html">Currently Airing</a>
+  <a href="agenda.html">View Agenda</a>
+  <a href="mylist.html">Manage My Series</a>
+  <a href="logout.html" style=float:right;>Logout</a>
 </div>
-  <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
-    <script>
-         $("#login").click(function () {
-	try{
-    	var username=$("#username").val()
-        var password=$("#password").val()
-    		
-    	var uri = "/restservices/customer/"+username+"+"+password;
-		$.getJSON(uri, function(data){
-			if (data.length != 0){
-				window.sessionStorage.setItem("user", data.id);
-				window.sessionStorage.setItem("password", data.password);
-				alert("Login succesful!");
-				window.location = "/agenda.html";
-			}
-			else{
-				alert("No matching combination of user & password found")
-			}
-		});	
-    }catch(err){
-       alert("No matching combination of user & password found")
-    }});
-    </script>
+<!-- !PAGE CONTENT! -->
+<div class="w3-main w3-content w3-padding" style="max-width:1400px;margin-top:50px">
+<div class=w3-display-container>
+<img src="img/banner.jpg" style=width:100%;/>
+</div>
+  <!-- First Photo Grid-->
+  <div class="w3-row-padding w3-padding-16 w3-center" id="series1">
+    <h2>Latest Series</h2><hr>
+  </div>
+  
+  <!-- Second Photo Grid-->
+  <div class="w3-row-padding w3-padding-16 w3-center" id="series2">
+      <h2>Most Popular</h2><hr>
+  </div>
+  
+   <!-- Third Photo Grid-->
+  <div class="w3-row-padding w3-padding-16 w3-center" id="series3">
+  	<h2>Best Ranked</h2><hr>
+  </div>
+<hr>
+  
+  <!-- Footer -->
+  <footer class="w3-row-padding w3-padding-32" style=background-color:red;color:white>
+    <p>NetflixApp is a project by Lucca Huijgens, created with W3Schools CSS.</p>
+  </footer>
+
+<!-- End page content -->
+</div>
+<script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<script>
+function loadlatest(){
+		$.getJSON("/thirdapp/restservices/series/latest?batch="+0, function(data){
+			$.each(data, function(i, series){
+				$("#series1").append(
+				"<div class=seriesimage style=width:12%;float:left;padding:8px>"+
+				   "<a href=series/1.html><img src=img/"+series.id+".jpg alt=Sandwich style=width:100%></a>"+
+			      "<h3>"+series.title+"</h3></div>");
+			});
+
+	});
+}
+function loadpopular(){
+	$.getJSON("/thirdapp/restservices/series/popular?batch="+0, function(data){
+		$.each(data, function(i, series){
+			$("#series2").append(
+			"<div class=seriesimage style=width:12%;float:left;padding:8px>"+
+			   "<a href=series/1.html><img src=img/"+series.id+".jpg alt=Sandwich style=width:100%></a>"+
+		      "<h3>"+series.title+"</h3></div>");
+		});
+
+});
+}
+function loadtop(){
+	$.getJSON("/thirdapp/restservices/series/top?batch="+0, function(data){
+		$.each(data, function(i, series){
+			$("#series3").append(
+			"<div class=seriesimage style=width:12%;float:left;padding:8px>"+
+			   "<a href=series/1.html><img src=img/"+series.id+".jpg alt=Sandwich style=width:100%></a>"+
+		      "<h3>"+series.title+"</h3></div>");
+		});
+
+});
+}
+loadlatest()
+loadpopular()
+loadtop()
+</script>
+<script>
+$("#series").on('click', 'input[type=button]', function () {
+       var custid = $(this).data('custid');
+       var seriesid = $(this).data('seriesid');
+    	    var data = { "CustomerID": custid, "SeriesID": seriesid }
+    	    var JSONdata = JSON.stringify(data);
+    	    console.log(data);
+    	    $.post("/thirdapp/restservices/customerseries", JSONdata, function(response) {
+    	        $("#response").text(JSON.stringify(response));
+    	        alert("This Series has been added to your list!");
+    	    }); 
+    	});
+</script>
 
 </body>
 </html>

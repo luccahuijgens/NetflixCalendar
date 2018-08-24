@@ -35,4 +35,8 @@ public class CustomerSeriesService {
 	public ArrayList<CustomerSeries> getEmailbyCustomerID(Customer c, String date){
 		return CustomerSeriesdao.getEmailbyCustomerID(c.getId(), date);
 	}
+	public void updateStatus(Customer found, Series found2, String status) {
+		CustomerSeries cs=new CustomerSeries(found.getId(),found2.getCode());
+		CustomerSeriesdao.updateStatus(cs, status);	
+	}
 }

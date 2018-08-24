@@ -9,14 +9,14 @@ public class  Series{
 	private String enddate;
 	private String airday;
 	private int duration;
-	private int score;
+	private double score;
 	private String productionstudio;
 	private int rating;
 	private int viewers;
 	private String synopsis;
 	
 	public Series(int code, String title, String genre, int episodes, String startdate, String enddate, String airday,
-			int duration, int score, String productionstudio, int rating, int viewers, String synopsis) {
+			int duration, double score, String productionstudio, int rating, int viewers, String synopsis) {
 		super();
 		this.code = code;
 		this.title = title;
@@ -65,7 +65,7 @@ public class  Series{
 		return duration;
 	}
 
-	public int getScore() {
+	public double getScore() {
 		return score;
 	}
 

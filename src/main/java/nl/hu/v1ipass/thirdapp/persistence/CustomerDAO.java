@@ -68,7 +68,7 @@ public class CustomerDAO extends BaseDAO {
 				Statement stmt = conn.createStatement();
 				
 				// Een tweede statement maken dat een resultaat oplevert
- 				String queryText = "SELECT * FROM Customer WHERE id="+cd;
+ 				String queryText = "SELECT * FROM Customers WHERE id="+cd;
  				
  				// Een tweede statement uitvoeren
  				ResultSet rs = stmt.executeQuery(queryText);

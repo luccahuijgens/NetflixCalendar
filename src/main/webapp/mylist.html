@@ -1,34 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>My Followed Series</title>
-<link rel="stylesheet" href="css/mylist.css">
+<title>Netflix - My List</title>
+<link rel="stylesheet" href="css/series.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
 </head>
+<style>body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif};
+</style>
 <body>
+<!-- Top menu -->
+<div class="topnav">
+  <a class="active" href="index.html"><img src="img/logo.png" style=height:25px;/></a>
+  <a href="series.html">Browse Series</a>
+  <a href="currentlyairing.html">Currently Airing</a>
+  <a href="agenda.html">View Agenda</a>
+  <a class="current" href="mylist.html">Manage My Series</a>
+</div>
 
-<ul id="header">
-  <li><a class="active" href="agenda.html">View Agenda</a></li>
-  <li><a href="series.html">Browse Airing Series</a></li>
-  <li><a href="mycompleted.html">View Completed Series</a></li>
-   <li><a href="email.html">Manage E-mail Notifications</a></li>
-   <li style="float:right"><a class="active" href="logout.html">Logout</a></li>
-</ul>
+<!-- Page content -->
+<div class="w3-main w3-content w3-padding" style="max-width:1400px;>
+
+<!-- Table -->
 <div id="seriesList">
- <h1>My Subscribed Series</h1>
+<center> <h1>My Subscribed Series</h1></center>
+<div style="overflow-x:auto;">
  <table id="series">
  <tr>
- 	<th>Series&emsp;</th>
-    <th>Title&emsp;</th>
-    <th>Genre&emsp;</th>
-    <th>Episodes&emsp;</th> 
-    <th>Rating&emsp;</th>
-    <th>Viewers&emsp;</th>
-    <th>Studio</th>
-    <th>Synopsis&emsp;</th>
-    <th>Remove this Series&emsp;</th>
+ 	<th style=width:10%;>Series</th>
+    <th style=width:15%;>Title</th>
+    <th style=width:10%;>Status&emsp;</th>
+    <th style=width:10%;>Episodes&emsp;</th> 
+    <th style=width:10%;>Score&emsp;</th>
+    <th style=width:10%;>Startdate&emsp;</th>
+    <th style=width:10%;>Enddate</th>
+    <th style=width:10%;>Studio&emsp;</th>
+    <th style=width:5%;>Notify</th>
+    <th style=width:10%;>Remove this Series</th>
   </tr>
  </table>
  </div>
+ </div>
+ <!-- End page content -->
+ </div>
+ 
+   <!-- Footer -->
+   <footer class="w3-container w3-center w3-margin-top" style=color:white;background-color:red;><br>
+    <p>NetflixApp is a project by Lucca Huijgens, created with W3Schools CSS.<br><br></p>
+  </footer>
+  
 <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 <script>
 function loadSeries(){
@@ -37,22 +59,119 @@ function loadSeries(){
 		$.getJSON("/thirdapp/restservices/customerseries/"+user+"+"+password, function(data){
 			$.each(data, function(i, series){
 				$("#series").append(
-				"<tr><td><center><img src=img/"+series.id+".jpg border=3 height=320 width=225></img></center>&emsp;<br></td>"
-				+"<td><b>"+series.title+"</b>&emsp;<br></td>"
-				+"<td>"+series.genre+"&emsp;<br></td>"
-				+"<td>"+series.episodes+"&emsp;<br></td>"
-				+"<td>"+series.score+"&emsp;<br></td>"
-				+"<td>"+series.viewers+"&emsp;<br></td>"
+				"<tr><td><center><a href=series/"+series.id+".html><img src=img/"+series.id+".jpg border=3 style=width:100%;></img></a></center>&emsp;</td>"
+				+"<td><center><b>"+series.title+"</b></center><br></td>"
+				+"<td><center>"+Statusify(series.id,series.status)+"</center></td>"
+				+"<td><center>"+series.episodes+"</center></td>"
+				+"<td><center>"+Stringify(series.id,series.score)+"</center></td>"
+				+"<td><center>"+series.start+"</center></td>"
+				+"<td><center>"+series.end+"</center></td>"
 				+"<td><a href=/thirdapp/studios/"+series.studio+".html>"+series.studio+"</a><br></td>"
-				+"<td style=font-size:15px;>"+series.synopsis+"&emsp;<br></td>"
+				+"<td><center>"+Checkbox(series.email, user, series.id)+"</center><br></td>"
 				+"<td><input type=button value=Unfollow data-custid="+user+" data-seriesid="+series.id+"></td></tr>");
 			});
 
 	});
 }
+function Statusify(s,st){
+	var result="<select onChange=\"UpdateStatus("+s+",this.value)\">";
+	if(st=="PTW"){
+		result+="<option value=\"PTW\" selected>Plan to Watch</option>"+
+		"<option value=\"CW\">Currently Watching</option>"+
+		"<option value=\"OH\">On Hold</option>"+
+		"<option value=\"CMP\">Completed</option>"+
+		"<select>"
+	}
+	if(st=="OH"){
+		result+="<option value=\"PTW\">Plan to Watch</option>"+
+		"<option value=\"CW\">Currently Watching</option>"+
+		"<option value=\"OH\" selected>On Hold</option>"+
+		"<option value=\"CMP\">Completed</option>"+
+		"<select>"
+	}
+	if(st=="CW"){
+		result+="<option value=\"PTW\" selected>Plan to Watch</option>"+
+		"<option value=\"CW\" selected>Currently Watching</option>"+
+		"<option value=\"OH\">On Hold</option>"+
+		"<option value=\"CMP\">Completed</option>"+
+		"<select>"
+	}
+	if(st=="CMP"){
+		result+="<option value=\"PTW\" selected>Plan to Watch</option>"+
+		"<option value=\"CW\">Currently Watching</option>"+
+		"<option value=\"OH\">On Hold</option>"+
+		"<option value=\"CMP\" selected>Completed</option>"+
+		"<select>"
+	}
+	return result;
+}
+function Stringify(s,sc){
+	var result="<div class=\"select_box\"><select onChange=\"UpdateScore("+s+",this.value)\">"+
+	"<option value=10>(10) Masterpiece</option>"+
+	"<option value=9>(9) Amazing</option>"+
+	"<option value=8>(8) Very Good</option>"+
+	"<option value=7>(7) Good</option>"+
+	"<option value=6>(6) Fine</option>"+
+	"<option value=5>(5) Average</option>"+
+	"<option value=4>(4) Bad</option>"+
+	"<option value=3>(3) Very Bad</option>"+
+	"<option value=2>(2) Horrible</option>"+
+	"<option value=1>(1) Appalling</option>"+
+	"<option value=0>No Rating</option>"+
+	"</select>";
+	result=result.replace("value="+sc+">","selected=\"selected\" value="+sc+">");
+	return result;
+} 
+function Checkbox(e,c,s){
+	if(e=="Yes"){
+		return "<label class=\"container\"><input type=checkbox id=email"+s+" data-custid="+c+" data-seriesid="+s+" checked><span class=\"checkmark\"></span></label>";
+	}
+	else{
+		return "<label class=\"container\"><input type=checkbox id=email"+s+" data-custid="+c+" data-seriesid="+s+"><span class=\"checkmark\"></span></label>";
+		}
+}
 </script>
 <script>
+function UpdateScore(s,sc){
+	var user=window.sessionStorage.getItem("user");
+	var password=window.sessionStorage.getItem("password");
+    var seriesid = s;
+    var score=sc;
+    var intscore=parseInt(score);
 
+	$.ajax({
+	    cache: false,
+	    type: "PUT",
+	    url: "/thirdapp/restservices/customerseries/score",
+	    data: "customer="+user+"&password="+password+"&series="+seriesid+"&score="+intscore,
+	    dataType: "HTML",
+	    success: function (data) {
+	    	alert("Your score for this series has been adjusted!");
+	    },
+	    error: function (xhr, ajaxOptions, thrownError) {
+	    }
+	  });
+}
+function UpdateStatus(s,st){
+	var user=window.sessionStorage.getItem("user");
+	var password=window.sessionStorage.getItem("password");
+    var seriesid = s;
+    var status=st;
+    console.log(st);
+
+	$.ajax({
+	    cache: false,
+	    type: "PUT",
+	    url: "/thirdapp/restservices/customerseries/status",
+	    data: "customer="+user+"&password="+password+"&series="+seriesid+"&status="+st,
+	    dataType: "HTML",
+	    success: function (data) {
+	    	alert("Your current status for this series has been adjusted!");
+	    },
+	    error: function (xhr, ajaxOptions, thrownError) {
+	    }
+	  });
+}
 $("#series").on('click', 'input[type=button]', function () {
    var custid = $(this).data('custid');
    var seriesid = $(this).data('seriesid');
@@ -70,12 +189,66 @@ $("#series").on('click', 'input[type=button]', function () {
        }
    });
 });
+</script>
+<script>
+$("#series").on('click', 'input[type=checkbox]', function () {
+	var user=window.sessionStorage.getItem("user");
+    if(!$(this).is(':checked')){
+    	   var custid = $(this).data('custid');
+    	    var seriesid = $(this).data('seriesid');
+    	    var email="No";
+    	    console.log(custid+"+"+seriesid);
+    		console.log(email);
+    		
+    		var uri = "/thirdapp/restservices/customerseries/email/"+user+"+"+seriesid+"+"+email;
+    		console.log
 
+    		    $.ajax(uri, { 
+    		        type: "put", 
+    		        success: function(response) {
+    		        	alert("Email Notifications for this Series have been disabled!");
+    		            $("#response").text("Customer saved!");
+    		        },
+    		        error: function(response) {
+    		            $("#response").text("Could not update customer!");
+    		        }
+    		    }); 
+    }else{
+        console.log('checked');
+    var custid = $(this).data('custid');
+    var seriesid = $(this).data('seriesid');
+    var email="Yes";
+    console.log(custid+"+"+seriesid);
+	console.log(email);
+	
+	var uri = "/thirdapp/restservices/customerseries/email/"+user+"+"+seriesid+"+"+email;
+
+	    $.ajax(uri, { 
+	        type: "put", 
+	        success: function(response) {
+	        	alert("Email Notifications for this Series have been enabled!");
+	            $("#response").text("Customer saved!");
+	        },
+	        error: function(response) {
+	            $("#response").text("Could not update customer!");
+	        }
+	    }); 
+}
+}); 
 </script>
 <script>
 loadSeries()
+ var user=window.sessionStorage.getItem("user");
+ if(user!=null){
+	 $(".topnav").append("<a href=logout.html style=float:right;>Logout</a>")
+ }else{
+	 alert("You need to be logged in to view your list.");
+	 window.location = "login.html";
+ }
 </script>
+<script>
 
+</script>
 
 </body>
 </html>

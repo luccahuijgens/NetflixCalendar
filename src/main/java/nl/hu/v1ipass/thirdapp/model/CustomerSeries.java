@@ -1,18 +1,22 @@
 package nl.hu.v1ipass.thirdapp.model;
 
+import javax.json.JsonValue;
+
 public class CustomerSeries {
 private int CustID;
 private int SeriesID;
 private int Score;
 private String Finished;
 private String Email;
+private String Status;
 
-public CustomerSeries(int custID, int seriesID, int score, String finished, String email) {
+public CustomerSeries(int custID, int seriesID, int score, String finished, String email, String status) {
 	CustID = custID;
 	SeriesID = seriesID;
 	Score = score;
 	Finished = finished;
 	Email = email;
+	Status=status;
 }
 
 public CustomerSeries(int custID, int seriesID) {
@@ -44,5 +48,9 @@ public String getEmail() {
 }
 public String toString(){
 	return CustID+" + "+SeriesID;
+}
+
+public String getStatus() {
+	return Status;
 }
 }

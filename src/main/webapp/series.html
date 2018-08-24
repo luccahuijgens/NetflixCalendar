@@ -2,68 +2,72 @@
 <html>
 <head>
 <link rel="stylesheet" href="css/series.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
 </head>
+<style>body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif};
+</style>
 <body>
 
-<ul id="header">
-  <li><a class="active" href="agenda.html">View Agenda</a></li>
-  <li><a href="mylist.html">View Subscribed Series</a></li>
-  <li><a href="mycompleted.html">View Completed Series</a></li>
-   <li><a href="email.html">Manage E-mail Notifications</a></li>
-   <li style="float:right"><a class="active" href="logout.html">Logout</a></li>
-</ul>
-<div id="seriesList">
- <h1>Currently Airing Series</h1>
-  <table id="series">
- <tr>
- 	<th>Series&emsp;</th>
-    <th>Title&emsp;</th>
-    <th>Genre&emsp;</th>
-    <th>Episodes&emsp;</th> 
-    <th>Rating&emsp;</th>
-    <th>Viewers&emsp;</th>
-    <th>Studio</th>
-    <th>Synopsis&emsp;</th>
-    <th>Follow this Series&emsp;</th>
-  </tr>
- </table>
- </div>
+<!-- Top menu -->
+<div class="topnav">
+  <a class="active" href="index.html"><img src="img/logo.png" style=height:25px;/></a>
+  <a class="current" href="#home">Browse Series</a>
+  <a href="currentlyairing.html">Currently Airing</a>
+  <a href="agenda.html">View Agenda</a>
+  <a href="mylist.html">Manage My Series</a>
+</div>
+<!-- !PAGE CONTENT! -->
+<div class="w3-main w3-content w3-padding" style="max-width:1400px;margin-top:50px">
+
+  <!-- First Photo Grid-->
+  <div class="w3-row-padding w3-padding-16 w3-center" id="series1">
+  </div>
+  
+  <!-- Second Photo Grid-->
+  <div class="w3-row-padding w3-padding-16 w3-center" id="series2">
+  </div>
+  
+   <!-- Third Photo Grid-->
+  <div class="w3-row-padding w3-padding-16 w3-center" id="series3">
+  </div>
+<hr>
+<!-- End page content -->
+</div>
+
+  <!-- Footer -->
+   <footer class="w3-container w3-center w3-margin-top" style=color:white;background-color:red;><br>
+    <p>NetflixApp is a project by Lucca Huijgens, created with W3Schools CSS.<br><br></p>
+  </footer>
+  
 <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 <script>
-function loadSeries(){
+function loadSeries(batch,row){
 		var user=window.sessionStorage.getItem("user");
-		$.getJSON("/thirdapp/restservices/series", function(data){
+		$.getJSON("/thirdapp/restservices/series?batch="+batch, function(data){
 			$.each(data, function(i, series){
-				$("#series").append(
-				"<tr><td><center><img src=img/"+series.id+".jpg border=3 height=320 width=225></img></center>&emsp;<br></td>"
-				+"<td><b>"+series.title+"</b>&emsp;<br></td>"
-				+"<td>"+series.genre+"&emsp;<br></td>"
-				+"<td>"+series.episodes+"&emsp;<br></td>"
-				+"<td>"+series.score+"&emsp;<br></td>"
-				+"<td>"+series.viewers+"&emsp;<br></td>"
-				+"<td><a href=/thirdapp/studios/"+series.studio+".html>"+series.studio+"</a><br></td>"
-				+"<td style=font-size:15px;>"+series.synopsis+"&emsp;<br></td>"
-				+"<td><input type=button value=Follow data-custid="+user+" data-seriesid="+series.id+"></td></tr>");
+				$("#series"+row).append(
+				"<div class=seriesimage style=width:20%;float:left;padding:8px>"+
+				   "<a href=series/"+series.id+".html><img src=img/"+series.id+".jpg alt=Sandwich style=width:100%></a>"+
+			      "<h3>"+series.title+"</h3></div>");
 			});
 
 	});
 }
+loadSeries(0,1)
+loadSeries(5,2)
+loadSeries(10,3)
 </script>
 <script>
-$("#series").on('click', 'input[type=button]', function () {
-       var custid = $(this).data('custid');
-       var seriesid = $(this).data('seriesid');
-    	    var data = { "CustomerID": custid, "SeriesID": seriesid }
-    	    var JSONdata = JSON.stringify(data);
-    	    console.log(data);
-    	    $.post("/thirdapp/restservices/customerseries", JSONdata, function(response) {
-    	        $("#response").text(JSON.stringify(response));
-    	        alert("This Series has been added to your list!");
-    	    }); 
-    	});
+var user=window.sessionStorage.getItem("user");
+if(user!=null){
+	 $(".topnav").append("<a href=logout.html style=float:right;>Log Out</a>")
+}else{
+	 $(".topnav").append("<a href=login.html style=float:right;>Log In</a>")
+}
 </script>
-<script>loadSeries()</script>
-
 
 </body>
 </html>
