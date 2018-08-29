@@ -21,4 +21,4 @@ The application uses a front-end that utilizes CSS, HTML5 and JavaScript. The ap
 **Keep track of all the new episodes for your favorite series**
 
 ![alt text](https://raw.githubusercontent.com/graddus/NetflixApp/master/mylist.png)
-**Get a quick overview of all the series you have watched, are watching or are planning to watch**
+**Get a quick overview of all the series you have watched, are watching or are planning to watch!**
