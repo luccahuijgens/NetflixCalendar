@@ -1,8 +1,5 @@
 package nl.hu.v1ipass.thirdapp.webservices;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -14,12 +11,11 @@ import javax.ws.rs.Produces;
 
 import nl.hu.v1ipass.thirdapp.model.Customer;
 import nl.hu.v1ipass.thirdapp.model.CustomerService;
-import nl.hu.v1ipass.thirdapp.model.CustomerServiceProvider;
-import nl.hu.v1ipass.thirdapp.model.Series;
+import nl.hu.v1ipass.thirdapp.model.ServiceProvider;
 
 @Path("customer")
 public class CustomerResource {
-	CustomerService service = CustomerServiceProvider.getCustomerService();
+	CustomerService service = ServiceProvider.getCustomerService();
 
 	@GET
 	@Produces("application/json")

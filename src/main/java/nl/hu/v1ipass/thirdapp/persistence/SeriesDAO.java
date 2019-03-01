@@ -2,13 +2,12 @@ package nl.hu.v1ipass.thirdapp.persistence;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import nl.hu.v1ipass.thirdapp.model.Customer;
-import nl.hu.v1ipass.thirdapp.model.CustomerSeries;
 import nl.hu.v1ipass.thirdapp.model.Series;
 
 public class SeriesDAO extends BaseDAO{
@@ -27,46 +26,14 @@ public class SeriesDAO extends BaseDAO{
 				//System.out.println("Connection made");
 
 				// Een eerste SQL statement maken
-				Statement stmt = conn.createStatement();
-				
-				// Een tweede statement maken dat een resultaat oplevert
- 				String queryText = "SELECT * FROM Series";
+				PreparedStatement stmt = conn.prepareStatement("SELECT * FROM SERIES");
  				
  				// Een tweede statement uitvoeren
- 				ResultSet rs = stmt.executeQuery(queryText);
- 				
- 				int code;
- 				String title;
- 				String genre;
- 				int episodes;
- 				String startdate;
- 				String enddate;
- 				String airday;
- 				int duration;
- 				double score;
- 				String productionstudio;
- 				int rating;
- 				int viewers;
- 				String synopsis;
- 				Series Series;
+ 				ResultSet rs = stmt.executeQuery();
  				
  				while (rs.next()) {
  					
- 					code = rs.getInt("ID");	
- 					title = rs.getString("title");
- 					genre= rs.getString("genre");
- 					episodes = rs.getInt("episodes");	
- 					startdate = rs.getString("startdate");
- 					enddate= rs.getString("enddate");
- 					airday = rs.getString("airday");
- 					duration = rs.getInt("duration");
- 					score = rs.getDouble("score");	
- 					productionstudio = rs.getString("studio");
- 					rating = rs.getInt("rating");
- 					viewers= rs.getInt("viewers");
- 					synopsis=rs.getString("synopsis");
- 					Series=new Series(code, title, genre, episodes, startdate, enddate, airday, duration, score, productionstudio, rating, viewers,synopsis);
- 					Serieslijst.add(Series);
+ 					Serieslijst.add(convertSeries(rs));
  					}
  				// De resultset, het statement en de verbinding sluiten
  				rs.close();
@@ -87,47 +54,17 @@ public class SeriesDAO extends BaseDAO{
 				//System.out.println("Connection made");
 
 				// Een eerste SQL statement maken
-				Statement stmt = conn.createStatement();
+				PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Series s WHERE s.enddate is null or s.enddate>to_date(?,'dd/mm/yy')");
+ 				stmt.setString(1, date);
 				
-				// Een tweede statement maken dat een resultaat oplevert
- 				String queryText = "SELECT * FROM Series s WHERE s.enddate>to_date('"+date+"','dd/mm/yy')";
- 				
  				// Een tweede statement uitvoeren
- 				ResultSet rs = stmt.executeQuery(queryText);
- 				
- 				int code;
- 				String title;
- 				String genre;
- 				int episodes;
- 				String startdate;
- 				String enddate;
- 				String airday;
- 				int duration;
- 				double score;
- 				String productionstudio;
- 				int rating;
- 				int viewers;
- 				String synopsis;
- 				Series Series;
+ 				ResultSet rs = stmt.executeQuery();
  				
  				while (rs.next()) {
  					
- 					code = rs.getInt("ID");	
- 					title = rs.getString("title");
- 					genre= rs.getString("genre");
- 					episodes = rs.getInt("episodes");	
- 					startdate = rs.getString("startdate");
- 					enddate= rs.getString("enddate");
- 					airday = rs.getString("airday");
- 					duration = rs.getInt("duration");
- 					score = rs.getDouble("score");	
- 					productionstudio = rs.getString("studio");
- 					rating = rs.getInt("rating");
- 					viewers= rs.getInt("viewers");
- 					synopsis=rs.getString("synopsis");
- 					Series=new Series(code, title, genre, episodes, startdate, enddate, airday, duration, score, productionstudio, rating, viewers,synopsis);
- 					Serieslijst.add(Series);
+ 					Serieslijst.add(convertSeries(rs));
  					}
+ 				
  				// De resultset, het statement en de verbinding sluiten
  				rs.close();
  				stmt.close();
@@ -146,46 +83,14 @@ public class SeriesDAO extends BaseDAO{
 				//System.out.println("Connection made");
 
 				// Een eerste SQL statement maken
-				Statement stmt = conn.createStatement();
-				
-				// Een tweede statement maken dat een resultaat oplevert
- 				String queryText = "SELECT * FROM Series s WHERE s.enddate<to_date('"+date+"','dd/mm/yy')";
- 				
+				PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Series s WHERE s.enddate<to_date(?,'dd/mm/yy')");
+ 				stmt.setString(1, date);
  				// Een tweede statement uitvoeren
- 				ResultSet rs = stmt.executeQuery(queryText);
- 				
- 				int code;
- 				String title;
- 				String genre;
- 				int episodes;
- 				String startdate;
- 				String enddate;
- 				String airday;
- 				int duration;
- 				double score;
- 				String productionstudio;
- 				int rating;
- 				int viewers;
- 				String synopsis;
- 				Series Series;
+ 				ResultSet rs = stmt.executeQuery();
  				
  				while (rs.next()) {
  					
- 					code = rs.getInt("ID");	
- 					title = rs.getString("title");
- 					genre= rs.getString("genre");
- 					episodes = rs.getInt("episodes");	
- 					startdate = rs.getString("startdate");
- 					enddate= rs.getString("enddate");
- 					airday = rs.getString("airday");
- 					duration = rs.getInt("duration");
- 					score = rs.getDouble("score");	
- 					productionstudio = rs.getString("studio");
- 					rating = rs.getInt("rating");
- 					viewers= rs.getInt("viewers");
- 					synopsis=rs.getString("synopsis");
- 					Series=new Series(code, title, genre, episodes, startdate, enddate, airday, duration, score, productionstudio, rating, viewers,synopsis);
- 					Serieslijst.add(Series);
+ 					Serieslijst.add(convertSeries(rs));
  					}
  				// De resultset, het statement en de verbinding sluiten
  				rs.close();
@@ -198,53 +103,22 @@ public class SeriesDAO extends BaseDAO{
 		return Serieslijst;
  	}
 	public Series getSeriesbyCode(int cd){
-		ArrayList<Series>Serieslijst=new ArrayList<Series>();
+		Series series=null;
 		// Leg de connectie met de database
 		try{
 			Connection conn=super.getConnection();
 				//System.out.println("Connection made");
 
 				// Een eerste SQL statement maken
-				Statement stmt = conn.createStatement();
-				
-				// Een tweede statement maken dat een resultaat oplevert
- 				String queryText = "SELECT * FROM Series s WHERE s.id="+cd;
+				PreparedStatement stmt = conn.prepareStatement("SELECT * FROM SERIES WHERE ID=?");
+				stmt.setInt(1,cd);
  				
  				// Een tweede statement uitvoeren
- 				ResultSet rs = stmt.executeQuery(queryText);
+ 				ResultSet rs = stmt.executeQuery();
  				
- 				int code;
- 				String title;
- 				String genre;
- 				int episodes;
- 				String startdate;
- 				String enddate;
- 				String airday;
- 				int duration;
- 				double score;
- 				String productionstudio;
- 				int rating;
- 				int viewers;
- 				String synopsis;
- 				Series Series;
- 				
- 				while (rs.next()) {
+ 				if (rs.next()) {
  					
- 					code = rs.getInt("ID");	
- 					title = rs.getString("title");
- 					genre= rs.getString("genre");
- 					episodes = rs.getInt("episodes");	
- 					startdate = rs.getString("startdate");
- 					enddate= rs.getString("enddate");
- 					airday = rs.getString("airday");
- 					duration = rs.getInt("duration");
- 					score = rs.getDouble("score");	
- 					productionstudio = rs.getString("studio");
- 					rating = rs.getInt("rating");
- 					viewers= rs.getInt("viewers");
- 					synopsis=rs.getString("synopsis");
- 					Series=new Series(code, title, genre, episodes, startdate, enddate, airday, duration, score, productionstudio, rating, viewers,synopsis);
- 					Serieslijst.add(Series);
+ 					series=convertSeries(rs);
  					}
  				// De resultset, het statement en de verbinding sluiten
  				rs.close();
@@ -254,7 +128,7 @@ public class SeriesDAO extends BaseDAO{
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		return Serieslijst.get(0);
+		return series;
  	}
 
 		public ArrayList<Series> getSeriesbyCustomerID(int cd, String date){
@@ -263,47 +137,16 @@ public class SeriesDAO extends BaseDAO{
 		Connection conn=super.getConnection();
 				
 					// Een eerste SQL statement maken
-					Statement stmt = conn.createStatement();
-					
-					// Een tweede statement maken dat een resultaat oplevert
-	 				String queryText = "SELECT * FROM Series s WHERE s.enddate>to_date('"+date+"','dd/mm/yy') AND s.ID IN (SELECT cs.SeriesID FROM CustomerSeries cs WHERE cs.CustomerID ="+cd+")";
-                          
+					PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Series s WHERE s.enddate>to_date(?,'dd/mm/yy') AND s.ID IN (SELECT cs.SeriesID FROM CustomerSeries cs WHERE cs.CustomerID =?)");
+                    stmt.setString(1, date);
+                    stmt.setInt(2, cd);
 	 				
 	 				// Een tweede statement uitvoeren
-	 				ResultSet rs = stmt.executeQuery(queryText);
-	 				
-	 				int code;
-	 				String title;
-	 				String genre;
-	 				int episodes;
-	 				String startdate;
-	 				String enddate;
-	 				String airday;
-	 				int duration;
-	 				double score;
-	 				String productionstudio;
-	 				int rating;
-	 				int viewers;
-	 				String synopsis;
-	 				Series Series;
+	 				ResultSet rs = stmt.executeQuery();
 	 				
 	 				while (rs.next()) {
 	 					
-	 					code = rs.getInt("ID");	
-	 					title = rs.getString("title");
-	 					genre= rs.getString("genre");
-	 					episodes = rs.getInt("episodes");	
-	 					startdate = rs.getString("startdate");
-	 					enddate= rs.getString("enddate");
-	 					airday = rs.getString("airday");
-	 					duration = rs.getInt("duration");
-	 					score = rs.getDouble("score");	
-	 					productionstudio = rs.getString("studio");
-	 					rating = rs.getInt("rating");
-	 					viewers= rs.getInt("viewers");
-	 					synopsis=rs.getString("synopsis");
-	 					Series=new Series(code, title, genre, episodes, startdate, enddate, airday, duration, score, productionstudio, rating, viewers,synopsis);
-	 					Serieslijst.add(Series);
+	 					Serieslijst.add(convertSeries(rs));
 	 					}
 	 				// De resultset, het statement en de verbinding sluiten
 	 				rs.close();
@@ -321,47 +164,18 @@ public class SeriesDAO extends BaseDAO{
 		Connection conn=super.getConnection();
 				
 					// Een eerste SQL statement maken
-					Statement stmt = conn.createStatement();
-					
-					// Een tweede statement maken dat een resultaat oplevert
-	 				String queryText = "select* from series s where s.enddate>to_date('"+date+"','dd/mm/yy') AND s.airday='"+day+"' AND s.id IN(select seriesid from customerseries where customerid="+cd+")";
+					PreparedStatement stmt = conn.prepareStatement("select* from series s where (s.enddate is null OR s.enddate>to_date(?,'dd/mm/yy')) AND s.airday=? AND s.id IN(select seriesid from customerseries where customerid=?)");
+	 				stmt.setString(1,date);
+	 				stmt.setString(2,day);
+	 				stmt.setInt(3,cd);
 	                      
 	 				
 	 				// Een tweede statement uitvoeren
-	 				ResultSet rs = stmt.executeQuery(queryText);
-	 				
-	 				int code;
-	 				String title;
-	 				String genre;
-	 				int episodes;
-	 				String startdate;
-	 				String enddate;
-	 				String airday;
-	 				int duration;
-	 				double score;
-	 				String productionstudio;
-	 				int rating;
-	 				int viewers;
-	 				String synopsis;
-	 				Series Series;
+	 				ResultSet rs = stmt.executeQuery();
 	 				
 	 				while (rs.next()) {
 	 					
-	 					code = rs.getInt("ID");	
-	 					title = rs.getString("title");
-	 					genre= rs.getString("genre");
-	 					episodes = rs.getInt("episodes");	
-	 					startdate = rs.getString("startdate");
-	 					enddate= rs.getString("enddate");
-	 					airday = rs.getString("airday");
-	 					duration = rs.getInt("duration");
-	 					score = rs.getDouble("score");	
-	 					productionstudio = rs.getString("studio");
-	 					rating = rs.getInt("rating");
-	 					viewers= rs.getInt("viewers");
-	 					synopsis=rs.getString("synopsis");
-	 					Series=new Series(code, title, genre, episodes, startdate, enddate, airday, duration, score, productionstudio, rating, viewers,synopsis);
-	 					Serieslijst.add(Series);
+	 					Serieslijst.add(convertSeries(rs));
 	 					}
 	 				// De resultset, het statement en de verbinding sluiten
 	 				rs.close();
@@ -379,47 +193,15 @@ public class SeriesDAO extends BaseDAO{
 		Connection conn=super.getConnection();
 				
 					// Een eerste SQL statement maken
-					Statement stmt = conn.createStatement();
-					
-					// Een tweede statement maken dat een resultaat oplevert
-	 				String queryText = "SELECT * FROM Series s WHERE s.enddate<to_date('"+date+"','dd/mm/yy') AND s.id IN (Select SeriesID from CustomerSeries Where CustomerID="+cd+")";
+					PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Series s WHERE s.enddate<to_date(?,'dd/mm/yy') AND s.id IN (Select SeriesID from CustomerSeries Where CustomerID=?)");
 	                      
 	 				
 	 				// Een tweede statement uitvoeren
-	 				ResultSet rs = stmt.executeQuery(queryText);
-	 				
-	 				int code;
-	 				String title;
-	 				String genre;
-	 				int episodes;
-	 				String startdate;
-	 				String enddate;
-	 				String airday;
-	 				int duration;
-	 				double score;
-	 				String productionstudio;
-	 				int rating;
-	 				int viewers;
-	 				String synopsis;
-	 				Series Series;
+	 				ResultSet rs = stmt.executeQuery();
 	 				
 	 				while (rs.next()) {
 	 					
-	 					code = rs.getInt("ID");	
-	 					title = rs.getString("title");
-	 					genre= rs.getString("genre");
-	 					episodes = rs.getInt("episodes");	
-	 					startdate = rs.getString("startdate");
-	 					enddate= rs.getString("enddate");
-	 					airday = rs.getString("airday");
-	 					duration = rs.getInt("duration");
-	 					score = rs.getDouble("score");	
-	 					productionstudio = rs.getString("studio");
-	 					rating = rs.getInt("rating");
-	 					viewers= rs.getInt("viewers");
-	 					synopsis=rs.getString("synopsis");
-	 					Series=new Series(code, title, genre, episodes, startdate, enddate, airday, duration, score, productionstudio, rating, viewers,synopsis);
-	 					Serieslijst.add(Series);
+	 					Serieslijst.add(convertSeries(rs));
 	 					}
 	 				// De resultset, het statement en de verbinding sluiten
 	 				rs.close();
@@ -431,4 +213,21 @@ public class SeriesDAO extends BaseDAO{
 	 				}
 	 				return Serieslijst;
 	}
+		private Series convertSeries(ResultSet rs) throws SQLException{
+				int code = rs.getInt("ID");	
+				String title = rs.getString("title");
+				String genre= rs.getString("genre");
+				int episodes = rs.getInt("episodes");	
+				String startdate = rs.getString("startdate");
+				String enddate= rs.getString("enddate");
+				String airday = rs.getString("airday");
+				int duration = rs.getInt("duration");
+			    double score = rs.getDouble("score");	
+				String productionstudio = rs.getString("studio");
+				int rating = rs.getInt("rating");
+				int viewers= rs.getInt("viewers");
+				String synopsis=rs.getString("synopsis");
+				Series series=new Series(code, title, genre, episodes, startdate, enddate, airday, duration, score, productionstudio, rating, viewers,synopsis);
+				return series;
+		}
 }

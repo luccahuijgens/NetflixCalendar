@@ -13,11 +13,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import nl.hu.v1ipass.thirdapp.model.Series;
+import nl.hu.v1ipass.thirdapp.model.ServiceProvider;
 import nl.hu.v1ipass.thirdapp.model.StudioService;
-import nl.hu.v1ipass.thirdapp.model.StudioServiceProvider;
 @Path("studio")
 public class StudioResource {
-	StudioService service = StudioServiceProvider.getStudioService();
+	StudioService service = ServiceProvider.getStudioService();
 	
 	@Path("{name}")
 	@GET

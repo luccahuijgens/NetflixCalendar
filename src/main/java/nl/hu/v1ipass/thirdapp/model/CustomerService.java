@@ -14,5 +14,8 @@ public class CustomerService {
 	public Customer getCustbyLogin(String email, String password) {
 		return customerdao.login(email, password);
 	}
+	public Customer getCustomerByID(int id) {
+		return customerdao.findCustomerbyCode(id);
+	}
 	
 }

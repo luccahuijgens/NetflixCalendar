@@ -60,7 +60,7 @@
 <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 <script>
 function loadseries(){
-	$.getJSON("/thirdapp/restservices/series/11", function(series){
+	$.getJSON("/thirdapp/restservices/series/13", function(series){
 		var user=window.sessionStorage.getItem("user");
 		    $("#info").append(
 		 	        "<div class=\"w3-white w3-text-grey w3-card-4\">"+
@@ -93,7 +93,7 @@ loadseries();
 </script>
 <script>
 function loadreviews(){
-	$.getJSON("/thirdapp/restservices/reviews/11", function(data){
+	$.getJSON("/thirdapp/restservices/reviews/13", function(data){
 		$.each(data, function(i, review){
 			$("#reviews").append(
 			"<div class=w3-container>"+

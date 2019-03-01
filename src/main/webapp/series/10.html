@@ -93,7 +93,7 @@ loadseries();
 </script>
 <script>
 function loadreviews(){
-	$.getJSON("/thirdapp/restservices/reviews/1", function(data){
+	$.getJSON("/thirdapp/restservices/reviews/10", function(data){
 		$.each(data, function(i, review){
 			$("#reviews").append(
 			"<div class=w3-container>"+

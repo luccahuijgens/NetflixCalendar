@@ -19,7 +19,8 @@
   <a href="currentlyairing.html">Currently Airing</a>
   <a class="current" href="agenda.html">View Agenda</a>
   <a href="mylist.html">Manage My Series</a>
-  <a href="logout.html" style=float:right;>Logout</a>
+  <a id=logout href="logout.html" style=display:none;float:right;>Log Out</a>
+  <a id=login href="login.html" style=float:right;>Log In</a>
 </div>
 <!-- !PAGE CONTENT! -->
 <div class="w3-main w3-content w3-padding" style="max-width:1400px;">
@@ -74,6 +75,14 @@
   
 <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 <script>
+if (sessionStorage.getItem("user") !== null || sessionStorage.getItem("password") !==null){
+	document.getElementById("logout").style.removeProperty("display")
+	document.getElementById("login").style.display="none";
+}else{
+	 alert("You need to be logged in to view your agenda.");
+	 window.location = "login.html";
+}
+
 function loadSeries(){
 		var user=window.sessionStorage.getItem("user");
 		var password=window.sessionStorage.getItem("password");
@@ -163,15 +172,6 @@ loadSeries()
 		if ( data.length == 0 ) {
 			console.log("An error occured!")	
 		}});
-</script>
-<script>
-var user=window.sessionStorage.getItem("user");
-if(user!=null){
-	 $(".topnav").append("<a href=logout.html style=float:right;>Logout</a>")
-}else{
-	 alert("You need to be logged in to view your agenda.");
-	 window.location = "login.html";
-}
 </script>
 
 

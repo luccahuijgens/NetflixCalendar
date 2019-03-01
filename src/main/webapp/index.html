@@ -19,7 +19,8 @@
   <a href="currentlyairing.html">Currently Airing</a>
   <a href="agenda.html">View Agenda</a>
   <a href="mylist.html">Manage My Series</a>
-  <a href="logout.html" style=float:right;>Logout</a>
+  <a id=logout href="logout.html" style=display:none;float:right;>Log Out</a>
+  <a id=login href="login.html" style=float:right;>Log In</a>
 </div>
 <!-- !PAGE CONTENT! -->
 <div class="w3-main w3-content w3-padding" style="max-width:1400px;margin-top:50px">
@@ -51,12 +52,18 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
 <script>
+if (sessionStorage.getItem("user") !== null || sessionStorage.getItem("password") !==null){
+	document.getElementById("logout").style.removeProperty("display")
+	document.getElementById("login").style.display="none";
+}
+
+
 function loadlatest(){
 		$.getJSON("/thirdapp/restservices/series/latest?batch="+0, function(data){
 			$.each(data, function(i, series){
 				$("#series1").append(
 				"<div class=seriesimage style=width:12%;float:left;padding:8px>"+
-				   "<a href=series/1.html><img src=img/"+series.id+".jpg alt=Sandwich style=width:100%></a>"+
+				   "<a href=series/"+series.id+".html><img src=img/"+series.id+".jpg alt=Sandwich style=width:100%></a>"+
 			      "<h3>"+series.title+"</h3></div>");
 			});
 
@@ -67,7 +74,7 @@ function loadpopular(){
 		$.each(data, function(i, series){
 			$("#series2").append(
 			"<div class=seriesimage style=width:12%;float:left;padding:8px>"+
-			   "<a href=series/1.html><img src=img/"+series.id+".jpg alt=Sandwich style=width:100%></a>"+
+			   "<a href=series/"+series.id+".html><img src=img/"+series.id+".jpg alt=Sandwich style=width:100%></a>"+
 		      "<h3>"+series.title+"</h3></div>");
 		});
 
@@ -78,7 +85,7 @@ function loadtop(){
 		$.each(data, function(i, series){
 			$("#series3").append(
 			"<div class=seriesimage style=width:12%;float:left;padding:8px>"+
-			   "<a href=series/1.html><img src=img/"+series.id+".jpg alt=Sandwich style=width:100%></a>"+
+			   "<a href=series/"+series.id+".html><img src=img/"+series.id+".jpg alt=Sandwich style=width:100%></a>"+
 		      "<h3>"+series.title+"</h3></div>");
 		});
 

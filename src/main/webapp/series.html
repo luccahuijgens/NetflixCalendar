@@ -18,6 +18,8 @@
   <a href="currentlyairing.html">Currently Airing</a>
   <a href="agenda.html">View Agenda</a>
   <a href="mylist.html">Manage My Series</a>
+    <a id=logout href="logout.html" style=display:none;float:right;>Log Out</a>
+  <a id=login href="login.html" style=float:right;>Log In</a>
 </div>
 <!-- !PAGE CONTENT! -->
 <div class="w3-main w3-content w3-padding" style="max-width:1400px;margin-top:50px">
@@ -61,11 +63,9 @@ loadSeries(5,2)
 loadSeries(10,3)
 </script>
 <script>
-var user=window.sessionStorage.getItem("user");
-if(user!=null){
-	 $(".topnav").append("<a href=logout.html style=float:right;>Log Out</a>")
-}else{
-	 $(".topnav").append("<a href=login.html style=float:right;>Log In</a>")
+if (sessionStorage.getItem("user") !== null || sessionStorage.getItem("password") !==null){
+	document.getElementById("logout").style.removeProperty("display")
+	document.getElementById("login").style.display="none";
 }
 </script>
 
