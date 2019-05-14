@@ -1,56 +1,51 @@
 package nl.hu.v1ipass.thirdapp.model;
 
-import javax.json.JsonValue;
-
 public class CustomerSeries {
-private int CustID;
-private int SeriesID;
-private int Score;
-private String Finished;
-private String Email;
-private String Status;
+private int customerID;
+private int seriesID;
+private int score;
+private String finished;
+private String email;
+private String status;
 
-public CustomerSeries(int custID, int seriesID, int score, String finished, String email, String status) {
-	CustID = custID;
-	SeriesID = seriesID;
-	Score = score;
-	Finished = finished;
-	Email = email;
-	Status=status;
+public CustomerSeries(int customerID, int seriesID, int score, String finished, String email, String status) {
+	super();
+	this.customerID = customerID;
+	this.seriesID = seriesID;
+	this.score = score;
+	this.finished = finished;
+	this.email = email;
+	this.status = status;
 }
 
-public CustomerSeries(int custID, int seriesID) {
-	CustID = custID;
-	SeriesID = seriesID;
-	Score = 0;
-	Finished = "No";
-	Email = "No";
+public CustomerSeries (int customerID,int seriesID) {
+	this.customerID=customerID;
+	this.seriesID=seriesID;
 }
 
-public int getCustID() {
-	return CustID;
+public int getCustomerID() {
+	return customerID;
 }
 
 public int getSeriesID() {
-	return SeriesID;
+	return seriesID;
 }
 
 public int getScore() {
-	return Score;
+	return score;
 }
 
 public String getFinished() {
-	return Finished;
+	return finished;
 }
 
 public String getEmail() {
-	return Email;
-}
-public String toString(){
-	return CustID+" + "+SeriesID;
+	return email;
 }
 
 public String getStatus() {
-	return Status;
+	return status;
 }
+
 }
+

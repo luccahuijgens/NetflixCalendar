@@ -10,8 +10,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import nl.hu.v1ipass.thirdapp.model.Customer;
-import nl.hu.v1ipass.thirdapp.model.CustomerService;
-import nl.hu.v1ipass.thirdapp.model.ServiceProvider;
+import nl.hu.v1ipass.thirdapp.service.CustomerService;
+import nl.hu.v1ipass.thirdapp.service.ServiceProvider;
 
 @Path("customer")
 public class CustomerResource {
@@ -19,7 +19,7 @@ public class CustomerResource {
 
 	@GET
 	@Produces("application/json")
-	public String CountryList() {
+	public String getCustomers() {
 		JsonArrayBuilder jab = Json.createArrayBuilder();
 		
 		for (Customer c : service.getAllCustomers()) {
@@ -38,7 +38,7 @@ public class CustomerResource {
 	@Path("{email}+{pass}")
 	@GET
 	@Produces("application/json")
-	public String SeriesByCustID(@PathParam("email") String email, @PathParam("pass") String pass) {
+	public String getSeriesByCustID(@PathParam("email") String email, @PathParam("pass") String pass) {
 		Customer c = service.getCustbyLogin(email, pass);
 
 		JsonObjectBuilder job = Json.createObjectBuilder();

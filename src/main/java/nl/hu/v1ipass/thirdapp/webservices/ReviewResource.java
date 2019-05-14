@@ -1,6 +1,6 @@
 package nl.hu.v1ipass.thirdapp.webservices;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -11,11 +11,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import nl.hu.v1ipass.thirdapp.model.CustomerService;
 import nl.hu.v1ipass.thirdapp.model.Review;
-import nl.hu.v1ipass.thirdapp.model.ReviewService;
-import nl.hu.v1ipass.thirdapp.model.SeriesService;
-import nl.hu.v1ipass.thirdapp.model.ServiceProvider;
+import nl.hu.v1ipass.thirdapp.service.CustomerService;
+import nl.hu.v1ipass.thirdapp.service.ReviewService;
+import nl.hu.v1ipass.thirdapp.service.SeriesService;
+import nl.hu.v1ipass.thirdapp.service.ServiceProvider;
 
 @Path("/reviews")
 public class ReviewResource {
@@ -28,7 +28,7 @@ ReviewService rs=ServiceProvider.getReviewService();
 	@Produces("application/json")
 	public String getAllByID(@PathParam("id") int id) {
 		JsonArrayBuilder jab = Json.createArrayBuilder();
-		ArrayList<Review>reviews=rs.getReviewsBySeries(id);
+		List<Review>reviews=rs.getReviewsBySeries(id);
 		for (Review r : reviews) {
 			JsonObjectBuilder job = Json.createObjectBuilder();
 			job.add("customerid", r.getCustomer().getId());

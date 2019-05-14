@@ -31,27 +31,28 @@ import javax.ws.rs.core.Response;
 
 import nl.hu.v1ipass.thirdapp.model.Customer;
 import nl.hu.v1ipass.thirdapp.model.CustomerSeries;
-import nl.hu.v1ipass.thirdapp.model.CustomerSeriesService;
-import nl.hu.v1ipass.thirdapp.model.CustomerService;
 import nl.hu.v1ipass.thirdapp.model.Series;
-import nl.hu.v1ipass.thirdapp.model.SeriesService;
-import nl.hu.v1ipass.thirdapp.model.ServiceProvider;
+import nl.hu.v1ipass.thirdapp.service.CustomerSeriesService;
+import nl.hu.v1ipass.thirdapp.service.CustomerService;
+import nl.hu.v1ipass.thirdapp.service.SeriesService;
+import nl.hu.v1ipass.thirdapp.service.ServiceProvider;
 
 @Path("/customerseries")
 public class CustomerSeriesResource {
 	CustomerService cs = ServiceProvider.getCustomerService();
 	SeriesService ss = ServiceProvider.getSeriesService();
 	CustomerSeriesService css = ServiceProvider.getCustomerSeriesService();
+	SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/YY");
 
 	@Path("{id}+{password}")
 	@GET
 	@Produces("application/json")
-	public String SeriesByCustID(@PathParam("id") int code, @PathParam("password") String password) {
+	public String getSeriesBycustomerID(@PathParam("id") int code, @PathParam("password") String password) {
 		Customer found = null;
 		found = cs.getCustomerByID(code);
 		JsonArrayBuilder jab = Json.createArrayBuilder();
 		Date date = new Date();
-		String modifiedDate = new SimpleDateFormat("dd/MM/YY").format(date);
+		String modifiedDate = dateFormat.format(date);
 		for (CustomerSeries c : css.getUnfinishedCustomerSeriesbyCustomerID(found, modifiedDate)) {
 			Series series = ss.getSeriesbyCode(c.getSeriesID());
 			JsonObjectBuilder job = ObjectToJsonMapper.convertCustomerSeries(c, series);
@@ -73,13 +74,13 @@ public class CustomerSeriesResource {
 	@Path("{id}+{password}/{day}")
 	@GET
 	@Produces("application/json")
-	public String SeriesbyCustIDDate(@PathParam("id") int code, @PathParam("password") String password,
+	public String getSeriesbycustomerIDDate(@PathParam("id") int code, @PathParam("password") String password,
 			@PathParam("day") String day) {
 		Customer found = null;
 		found = cs.getCustomerByID(code);
 		JsonArrayBuilder jab = Json.createArrayBuilder();
 		Date date = new Date();
-		String modifiedDate = new SimpleDateFormat("dd/MM/YY").format(date);
+		String modifiedDate = dateFormat.format(date);
 		for (Series c : ss.getSeriesbyCustomerIDDay(found, day, modifiedDate)) {
 			JsonObjectBuilder job = Json.createObjectBuilder();
 			job.add("id", c.getCode());
@@ -102,12 +103,12 @@ public class CustomerSeriesResource {
 	@Path("{id}+{password}/finished")
 	@GET
 	@Produces("application/json")
-	public String FinishedSeriesByCustID(@PathParam("id") int code, @PathParam("password") String password) {
+	public String getFinishedSeriesBycustomerID(@PathParam("id") int code, @PathParam("password") String password) {
 		Customer found = null;
 		found = cs.getCustomerByID(code);
 		JsonArrayBuilder jab = Json.createArrayBuilder();
 		Date date = new Date();
-		String modifiedDate = new SimpleDateFormat("dd/MM/YY").format(date);
+		String modifiedDate = dateFormat.format(date);
 		for (CustomerSeries custser : css.getFinishedCustomerSeriesbyCustomerID(found, modifiedDate)) {
 			Series s = ss.getSeriesbyCode(custser.getSeriesID());
 			JsonObjectBuilder job = Json.createObjectBuilder();
@@ -131,12 +132,12 @@ public class CustomerSeriesResource {
 	@Path("{id}+{password}/unfinished")
 	@GET
 	@Produces("application/json")
-	public String UnfinishedSeriesByCustID(@PathParam("id") int code, @PathParam("password") String password) {
+	public String getUnfinishedSeriesBycustomerID(@PathParam("id") int code, @PathParam("password") String password) {
 		Customer found = null;
 		found = cs.getCustomerByID(code);
 		JsonArrayBuilder jab = Json.createArrayBuilder();
 		Date date = new Date();
-		String modifiedDate = new SimpleDateFormat("dd/MM/YY").format(date);
+		String modifiedDate = dateFormat.format(date);
 		for (CustomerSeries custser : css.getUnfinishedCustomerSeriesbyCustomerID(found, modifiedDate)) {
 			Series s = ss.getSeriesbyCode(custser.getSeriesID());
 			JsonObjectBuilder job = Json.createObjectBuilder();
@@ -161,11 +162,11 @@ public class CustomerSeriesResource {
 	@Produces("application/json")
 	public String createCustomer(InputStream is) {
 		JsonObject object = Json.createReader(is).readObject();
-		int CustID = object.getInt("CustomerID");
-		int SeriesID = object.getInt("SeriesID");
-		CustomerSeries cs = new CustomerSeries(CustID, SeriesID);
-		css.addEntry(cs);
-		return csToJson(cs).build().toString();
+		int customerID = object.getInt("CustomerID");
+		int seriesID = object.getInt("seriesID");
+		CustomerSeries customerseries = new CustomerSeries(customerID, seriesID);
+		css.addEntry(customerseries);
+		return csToJson(customerseries).build().toString();
 	}
 
 	@DELETE
@@ -191,9 +192,8 @@ public class CustomerSeriesResource {
 		Series found2 = null;
 		found = cs.getCustomerByID(custid);
 		found2 = ss.getSeriesbyCode(seriesid);
-		System.out.println(found.getName() + found2.getTitle());
 		if (found == null || found2 == null) {
-			Map<String, String> messages = new HashMap<String, String>();
+			Map<String, String> messages = new HashMap<>();
 			messages.put("error", "Not found");
 			return Response.status(404).entity(messages).build();
 		} else {
@@ -211,7 +211,7 @@ public class CustomerSeriesResource {
 		found = cs.getCustomerByID(custid);
 		found2 = ss.getSeriesbyCode(seriesid);
 		if (found == null || found2 == null) {
-			Map<String, String> messages = new HashMap<String, String>();
+			Map<String, String> messages = new HashMap<>();
 			messages.put("error", "Not found");
 			return Response.status(404).entity(messages).build();
 		} else {
@@ -241,7 +241,7 @@ public class CustomerSeriesResource {
 	public String sendEmail(@PathParam("CustomerId") int custid) {
 		Customer found = null;
 		Date date = new Date();
-		String modifiedDate = new SimpleDateFormat("dd/MM/YY").format(date);
+		String modifiedDate = dateFormat.format(date);
 		found = cs.getCustomerByID(custid);
 		for (CustomerSeries custs : css.getEmailbyCustomerID(found, modifiedDate)) {
 			Series s = ss.getSeriesbyCode(custs.getSeriesID());
@@ -324,7 +324,7 @@ public class CustomerSeriesResource {
 
 	private JsonObjectBuilder csToJson(CustomerSeries c) {
 		JsonObjectBuilder job = Json.createObjectBuilder();
-		job.add("custid", c.getCustID());
+		job.add("custid", c.getCustomerID());
 		job.add("seriesid", c.getSeriesID());
 		job.add("myscore", c.getScore());
 		job.add("finish", c.getFinished());

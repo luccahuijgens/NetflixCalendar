@@ -1,25 +1,14 @@
 package nl.hu.v1ipass.thirdapp.webservices;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 
-import nl.hu.v1ipass.thirdapp.model.Series;
-import nl.hu.v1ipass.thirdapp.model.ServiceProvider;
-import nl.hu.v1ipass.thirdapp.model.StudioService;
+import nl.hu.v1ipass.thirdapp.service.ServiceProvider;
+import nl.hu.v1ipass.thirdapp.service.StudioService;
 @Path("studio")
 public class StudioResource {
 	StudioService service = ServiceProvider.getStudioService();
 	
-	@Path("{name}")
+	/*@Path("{name}")
 	@GET
 	@Produces("application/json")
 	public String SeriesbyCustIDDate(@PathParam("name") String studio) {
@@ -44,5 +33,5 @@ public class StudioResource {
 		JsonArray array = jab.build();
 
 		return (array.toString());
-	}
+	}*/
 }

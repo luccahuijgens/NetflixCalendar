@@ -18,10 +18,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import jersey.repackaged.com.google.common.collect.Lists;
-import nl.hu.v1ipass.thirdapp.model.CustomerService;
 import nl.hu.v1ipass.thirdapp.model.Series;
-import nl.hu.v1ipass.thirdapp.model.SeriesService;
-import nl.hu.v1ipass.thirdapp.model.ServiceProvider;
+import nl.hu.v1ipass.thirdapp.service.CustomerService;
+import nl.hu.v1ipass.thirdapp.service.SeriesService;
+import nl.hu.v1ipass.thirdapp.service.ServiceProvider;
 
 @Path("series")
 public class SeriesResource {
@@ -32,13 +32,12 @@ public class SeriesResource {
 	@Produces("application/json")
 	public String getAll(@QueryParam("batch")int batch) {
 		JsonArrayBuilder jab = Json.createArrayBuilder();
-		Date date = new Date();
 		List<Series>serieslist=service.getAllSeries();
 		int batchend=batch+5;
 		if (batchend>serieslist.size()) {
 			batchend=serieslist.size();
 		}if (batch<=serieslist.size()) {
-		List<Series> result = new ArrayList<Series>(serieslist.subList(batch,batchend ));
+		List<Series> result = new ArrayList<>(serieslist.subList(batch,batchend ));
 		for (Series c : result) {
 			JsonObjectBuilder job = ObjectToJsonMapper.convertSeries(c);
 			jab.add(job);
@@ -61,7 +60,7 @@ public class SeriesResource {
 		if (batchend>serieslist.size()) {
 			batchend=serieslist.size();
 		}if (batch<=serieslist.size()) {
-		List<Series> result = new ArrayList<Series>(serieslist.subList(batch,batchend ));
+		List<Series> result = new ArrayList<>(serieslist.subList(batch,batchend ));
 		for (Series c : result) {
 			JsonObjectBuilder job = ObjectToJsonMapper.convertSeries(c);
 			jab.add(job);
@@ -78,19 +77,14 @@ public class SeriesResource {
 	public String getLatest(@QueryParam("batch")int batch) {
 		JsonArrayBuilder jab = Json.createArrayBuilder();
 		List<Series>serieslist=service.getAllSeries();
-		Collections.sort(serieslist, new Comparator<Series>() {
-
-	        public int compare(Series o1, Series o2) {
-	            // compare two instance of `Score` and return `int` as result.
-	        	    return o1.getStartdate().compareTo(o2.getStartdate());
-	        }
-	    });
+		Comparator<Series> comparator=(Series o1,Series o2)->(o1.getStartdate().compareTo(o2.getStartdate()));
+		Collections.sort(serieslist, comparator);
 		serieslist=Lists.reverse(serieslist);
 		int batchend=batch+8;
 		if (batchend>serieslist.size()) {
 			batchend=serieslist.size();
 		}if (batch<=serieslist.size()) {
-		List<Series> result = new ArrayList<Series>(serieslist.subList(batch,batchend ));
+		List<Series> result = new ArrayList<>(serieslist.subList(batch,batchend ));
 		for (Series c : result) {
 			JsonObjectBuilder job = ObjectToJsonMapper.convertSeries(c);
 			jab.add(job);
@@ -107,19 +101,14 @@ public class SeriesResource {
 	public String getPopular(@QueryParam("batch")int batch) {
 		JsonArrayBuilder jab = Json.createArrayBuilder();
 		List<Series>serieslist=service.getAllSeries();
-		Collections.sort(serieslist, new Comparator<Series>() {
-
-	        public int compare(Series o1, Series o2) {
-	            // compare two instance of `Score` and return `int` as result.
-	            return Integer.compare(o1.getViewers(), o2.getViewers());
-	        }
-	    });
+		Comparator<Series> comparator=(Series o1,Series o2) ->Integer.compare(o1.getViewers(), o2.getViewers());
+		Collections.sort(serieslist, comparator);
 		serieslist=Lists.reverse(serieslist);
 		int batchend=batch+8;
 		if (batchend>serieslist.size()) {
 			batchend=serieslist.size();
 		}if (batch<=serieslist.size()) {
-		List<Series> result = new ArrayList<Series>(serieslist.subList(batch,batchend ));
+		List<Series> result = new ArrayList<>(serieslist.subList(batch,batchend ));
 		for (Series c : result) {
 			JsonObjectBuilder job = ObjectToJsonMapper.convertSeries(c);
 			jab.add(job);
@@ -136,19 +125,14 @@ public class SeriesResource {
 	public String getTop(@QueryParam("batch")int batch) {
 		JsonArrayBuilder jab = Json.createArrayBuilder();
 		List<Series>serieslist=service.getAllSeries();
-		Collections.sort(serieslist, new Comparator<Series>() {
-
-	        public int compare(Series o1, Series o2) {
-	            // compare two instance of `Score` and return `int` as result.
-	            return Double.compare(o1.getScore(), o2.getScore());
-	        }
-	    });
+		Comparator<Series> comparator=(Series o1, Series o2) -> Double.compare(o1.getScore(), o2.getScore());
+		Collections.sort(serieslist, comparator);
 		serieslist=Lists.reverse(serieslist);
 		int batchend=batch+8;
 		if (batchend>serieslist.size()) {
 			batchend=serieslist.size();
 		}if (batch<=serieslist.size()) {
-		List<Series> result = new ArrayList<Series>(serieslist.subList(batch,batchend ));
+		List<Series> result = new ArrayList<>(serieslist.subList(batch,batchend ));
 		for (Series c : result) {
 			JsonObjectBuilder job = ObjectToJsonMapper.convertSeries(c);
 			jab.add(job);

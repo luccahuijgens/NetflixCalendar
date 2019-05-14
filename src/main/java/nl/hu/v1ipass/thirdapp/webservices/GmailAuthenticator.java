@@ -13,6 +13,7 @@ class GMailAuthenticator extends Authenticator {
         this.user = username;
         this.pw = password;
      }
+     @Override
     public PasswordAuthentication getPasswordAuthentication()
     {
        return new PasswordAuthentication(user, pw);

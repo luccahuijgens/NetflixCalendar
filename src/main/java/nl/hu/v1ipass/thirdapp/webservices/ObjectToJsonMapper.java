@@ -10,6 +10,7 @@ import nl.hu.v1ipass.thirdapp.model.CustomerSeries;
 import nl.hu.v1ipass.thirdapp.model.Series;
 
 public class ObjectToJsonMapper {
+	private ObjectToJsonMapper() {}
 
 	public static JsonObjectBuilder convertSeries(Series c) {
 		JsonObjectBuilder job = Json.createObjectBuilder();

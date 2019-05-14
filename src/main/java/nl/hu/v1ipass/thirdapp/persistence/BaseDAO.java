@@ -1,40 +1,54 @@
 package nl.hu.v1ipass.thirdapp.persistence;
 
-import java.io.IOException;
-import java.sql.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.Connection;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
+import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 
 public class BaseDAO {
-    private String connectionURL = "jdbc:postgresql://localhost:5432/netflix";
-    private String username = "postgres";
-    private String password = "Burdeos1";
-    private String driver = "org.postgresql.Driver";
-    private Connection con;
+	private DataSource connectionPool;
 
-    BaseDAO() {
-        try {
-            Class.forName(driver);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    Connection getConnection(){
-        // URL, User and Password
-        try {
-			con = DriverManager.getConnection(connectionURL, username, password);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public BaseDAO() {
+		try {
+			final String DATABASE_URL_PROP = System.getenv("DATABASE_URL");
+			if (DATABASE_URL_PROP != null) {
+				URI dbUri = new URI(DATABASE_URL_PROP);
+				String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+				getDataSource(dbUri, dbUrl);
+			} else {
+				InitialContext ic = new InitialContext();
+				connectionPool = (DataSource) ic.lookup("java:comp/env/jdbc/PostgresDS");
+			}}catch(NamingException | URISyntaxException e) {
+				throw new RuntimeException (e);
+			}
 		}
-        return con;
-    }
 
-    void close() throws SQLException {
-        if (con != null) {
-            con.close();
-        }
-    }
+	private void getDataSource(URI dbUri, String dbUrl) {
+		try(BasicDataSource pool = new BasicDataSource()){
+		if (dbUri.getUserInfo() != null) {
+			pool.setUsername(dbUri.getUserInfo().split(":")[0]);
+			pool.setPassword(dbUri.getUserInfo().split(":")[1]);
+		}
+		pool.setDriverClassName("org.postgresql.Driver");
+		pool.setUrl(dbUrl);
+		pool.setInitialSize(1);
 
+		connectionPool = pool;
+		}catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
+	protected final Connection getConnection() {
+		try {
+			return connectionPool.getConnection();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 }
-

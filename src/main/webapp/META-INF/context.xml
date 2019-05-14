@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
  <Resource name="jdbc/PostgresDS"  
- url="jdbc:postgresql://@ec2-54-75-229-201.eu-west-1.compute.amazonaws.com:5432/d2316dm43nqvbf"
+ url="jdbc:postgresql://localhost:5432/netflix"
 		  driverClassName="org.postgresql.Driver" 
  auth="Container"
  type="javax.sql.DataSource"
- username="rvcfcvqrwdfsqe"
- password="96872a688c2ad271c399ed4def3015f4b06154f71af0ada5fe45b30ad4ca5df2" />
+ username="postgres"
+ password="Burdeos1" />
 </Context>

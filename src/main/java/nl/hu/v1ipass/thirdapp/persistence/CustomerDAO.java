@@ -1,10 +1,11 @@
 package nl.hu.v1ipass.thirdapp.persistence;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import nl.hu.v1ipass.thirdapp.model.Customer;
 
@@ -12,137 +13,75 @@ public class CustomerDAO extends BaseDAO {
 	public CustomerDAO() {
 	}
 
-	//Lijst van alle Customers ontvangen
-	public ArrayList<Customer> getCustomers(){
-		ArrayList<Customer> Customerlijst = new ArrayList<Customer>();
-			// Leg de connectie met de database
-		try{			
-		Connection conn=super.getConnection();
-					System.out.println("Connection made");
-				
-					// Een eerste SQL statement maken
-					Statement stmt = conn.createStatement();
-					
-					// Een tweede statement maken dat een resultaat oplevert
-	 				String queryText = "SELECT * FROM Customers";
-	 				
-	 				// Een tweede statement uitvoeren
-	 				ResultSet rs = stmt.executeQuery(queryText);
-	 				
-	 				int code;
-	 				String name;
-	 				String surname;
-	 				String password;
-	 				String birthday;
-	 				String email;
-	 				Customer Customer;
-	 				
-	 				while (rs.next()) {
-	 					
-	 					code = rs.getInt("ID");	
-	 					name = rs.getString("name");
-	 					surname = rs.getString("surname");
-	 					password = rs.getString("password");
-	 					birthday= rs.getString("birthday");
-	 					email = rs.getString("email");
-	 					Customer=new Customer(code, name, surname, password, birthday, email);
-	 					Customerlijst.add(Customer);
-	 					}
-	 				// De resultset, het statement en de verbinding sluiten
-	 				rs.close();
-	 				stmt.close();
-	 				conn.close();
+	public List<Customer> getCustomers() {
+		ArrayList<Customer> customerList = new ArrayList<>();
+
+		try (Connection conn = super.getConnection();
+				PreparedStatement stmt = conn.prepareStatement("SELECT* FROM CUSTOMERS")) {
+
+			customerList = getCustomerListFromStatement(stmt);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-	 				catch (SQLException e){
-	 					e.printStackTrace();
-	 				}
-	 				return Customerlijst;
+		return customerList;
 	}
-	//Customer find op basis van Customer ID
-	public Customer findCustomerbyCode(int cd){
-		ArrayList<Customer> Customerlijst = new ArrayList<Customer>();
-	try{			
-	Connection conn=super.getConnection();
-			
-				// Een eerste SQL statement maken
-				Statement stmt = conn.createStatement();
-				
-				// Een tweede statement maken dat een resultaat oplevert
- 				String queryText = "SELECT * FROM Customers WHERE id="+cd;
- 				
- 				// Een tweede statement uitvoeren
- 				ResultSet rs = stmt.executeQuery(queryText);
- 				
- 				int code;
- 				String name;
- 				String surname;
- 				String password;
- 				String birthday;
- 				String email;
- 				Customer Customer;
- 				
- 				while (rs.next()) {
- 					
- 					code = rs.getInt("ID");	
- 					name = rs.getString("name");
- 					surname = rs.getString("surname");
- 					password = rs.getString("password");
- 					birthday= rs.getString("birthday");
- 					email = rs.getString("email");
- 					Customer=new Customer(code, name, surname, password, birthday, email);
- 					Customerlijst.add(Customer);
- 				}
- 				// De resultset, het statement en de verbinding sluiten
- 				rs.close();
- 				stmt.close();
- 				conn.close();
+
+	// Customer find op basis van Customer ID
+	public Customer findCustomerbyCode(int cd) {
+		ArrayList<Customer> customerList = new ArrayList<>();
+		try (Connection conn = super.getConnection();
+				PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Customers WHERE id=?")) {
+			stmt.setInt(1, cd);
+
+			customerList = getCustomerListFromStatement(stmt);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return customerList.get(0);
 	}
- 				catch (SQLException e){
- 					e.printStackTrace();
- 				}
- 				return Customerlijst.get(0);
-}
+
 //Customer vinden op basis van inloggegevens
-public Customer login(String email, String password){
-	ArrayList<Customer> Customerlijst = new ArrayList<Customer>();
-try{			
-Connection conn=super.getConnection();
-		
-			// Een eerste SQL statement maken
-			Statement stmt = conn.createStatement();
-			
-			// Een tweede statement maken dat een resultaat oplevert
-				String queryText = "SELECT * FROM Customers WHERE email='"+email+"' AND password='"+password+"'";
-				
-				// Een tweede statement uitvoeren
-				ResultSet rs = stmt.executeQuery(queryText);
-				
-				int code;
-				String name;
-				String surname;
-				String password2;
-				String birthday;
-				String email2;
-				Customer Customer;
-				
-				while (rs.next()) {
-					
-					code = rs.getInt("ID");	
-					name = rs.getString("name");
-					surname = rs.getString("surname");
-					password2 = rs.getString("password");
-					birthday= rs.getString("birthday");
-					email2 = rs.getString("email");
-					Customer=new Customer(code, name, surname, password2, birthday, email2);
-					Customerlijst.add(Customer);
-				}
-				// De resultset, het statement en de verbinding sluiten
-				rs.close();
-				stmt.close();
-				conn.close();
+	public Customer login(String email, String password) {
+		ArrayList<Customer> customerList = new ArrayList<>();
+		try (Connection conn = super.getConnection();
+				PreparedStatement stmt = conn
+						.prepareStatement("SELECT * FROM Customers WHERE email=? AND password=?")) {
+			stmt.setString(1, email);
+			stmt.setString(2, password);
+
+			customerList = getCustomerListFromStatement(stmt);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return customerList.get(0);
+	}
+
+	private ArrayList<Customer> getCustomerListFromStatement(PreparedStatement stmt) throws SQLException {
+
+		ArrayList<Customer> customerList = new ArrayList<>();
+		try (ResultSet rs = stmt.executeQuery()) {
+			while (rs.next()) {
+
+				Customer customer = convertRStoCustomer(rs);
+				customerList.add(customer);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return customerList;
+	}
+
+	private Customer convertRStoCustomer(ResultSet rs) throws SQLException {
+		int code = rs.getInt("ID");
+		String name = rs.getString("name");
+		String surname = rs.getString("surname");
+		String password2 = rs.getString("password");
+		String birthday = rs.getString("birthday");
+		String email2 = rs.getString("email");
+		return new Customer(code, name, surname, password2, birthday, email2);
+	}
 }
-				catch (SQLException e){
-					e.printStackTrace();
-				}
-				return Customerlijst.get(0);
-}}
